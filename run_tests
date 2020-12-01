@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#python3 -m unittest discover test 'test_*.py'
+pytest --collect-only
+# pytest test --html=report.html --self-contained-html
