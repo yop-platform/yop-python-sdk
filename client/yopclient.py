@@ -17,6 +17,9 @@ SDK_VERSION = '3.3.7'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
+locale_lang = locale_info[0]
+if locale_lang is None:
+    locale_lang = 'zh-CN'
 USER_AGENT = "/".join(['python',
                        SDK_VERSION,
                        platform_info[0],
@@ -24,7 +27,7 @@ USER_AGENT = "/".join(['python',
                        python_compiler[0],
                        python_compiler[1],
                        platform.python_version(),
-                       locale_info[0]])
+                       locale_lang])
 
 
 class YopClient:

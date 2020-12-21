@@ -5,6 +5,6 @@ if __name__ == '__main__':
     # pytest.main(["-s", "test/test_post.py"])
     # pytest.main(["-s", "test/test_post_json.py"])
     # pytest.main(["-s", "test/test_upload.py"])
-    pytest.main(["-s", "test/test_download.py"])
+    # pytest.main(["-s", "test/test_download.py"])
     # pytest.main(["-s", "test/test_post_json.py", "--env", "local"])
-    # pytest.main(["-s", "test/"])
+    pytest.main(["-s", "test/"])

@@ -68,9 +68,9 @@ class SigV3Authenticator:
         self.logger.debug('generate_signature...\n')
 
         query_str = ''
-        if 'GET' == http_method and query_params is not None:
+        if 'GET' == http_method and query_params:
             query_str = self.get_query_str(query_params.items())
-        elif 'POST' == http_method and not json_param:
+        elif 'POST' == http_method and not json_param and post_params:
             query_str = self.get_query_str(post_params.items())
 
         self.logger.debug('http_method:{}, query_str:{}'.format(http_method, query_str))
@@ -104,7 +104,7 @@ class SigV3Authenticator:
 
         headers['authorization'] = authorization_header + '$SHA256'
         headers['x-yop-session-id'] = self.session_id
-        headers['x-yop-request-id'] = str(yop_request_id)
+        headers['x-yop-request-id'] = yop_request_id
         headers['x-yop-appkey'] = app_key
         return headers
 

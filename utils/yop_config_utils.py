@@ -51,7 +51,7 @@ class YopClientConfig:
         store_type = config['store_type']
         if 'string' == store_type:
             public_key_string = config['value']
-            yop_public_key = security_utils.parse_pri_key(public_key_string)
+            yop_public_key = security_utils.parse_pub_key(public_key_string)
             return yop_public_key
         else:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))

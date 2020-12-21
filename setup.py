@@ -39,6 +39,7 @@ setup(
         'oss2>=2.13.1',
         'pycrypto>=2.6.1',
         'requests_toolbelt>=0.9',
+        'oss>=0.0.2',
     ],
     # python_requires='~=2.7,~=3.2',
     setup_requires=[
