@@ -2,8 +2,8 @@
 #!/usr/bin/env python
 
 import os
-import json
-from json.decoder import JSONDecodeError
+import simplejson
+from simplejson.decoder import JSONDecodeError
 import platform
 import locale
 from v3signer.auth import SigV3AuthProvider
@@ -13,7 +13,7 @@ from utils.yop_config_utils import YopClientConfig
 import utils.yop_security_utils as yop_security_utils
 import utils.yop_logging_utils as yop_logging_utils
 
-SDK_VERSION = '3.3.7'
+SDK_VERSION = '3.3.13'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -67,7 +67,7 @@ class YopClient:
 
         self._verify_res(res)
         try:
-            return json.loads(res.text)
+            return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
             self.logger.warn(res.text)
             pass
@@ -99,7 +99,7 @@ class YopClient:
         if res.status_code >= 500:
             self._verify_res(res)
             try:
-                return json.loads(res.text)
+                return simplejson.loads(res.text)
             except JSONDecodeError as identifier:
                 self.logger.warn(res.text)
                 pass
@@ -155,7 +155,7 @@ class YopClient:
 
         if json_param:
             headers['content-type'] = 'application/json'
-            data = json.dumps(
+            data = simplejson.dumps(
                 post_params, sort_keys=True, indent=4, separators=(
                     ',', ': '), ensure_ascii=True).encode("latin-1")
             res = self._post_request(url, payload=data, headers=headers)
@@ -167,7 +167,7 @@ class YopClient:
 
         self._verify_res(res)
         try:
-            return json.loads(res.text)
+            return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
             self.logger.warn(res.text)
             pass
@@ -199,7 +199,7 @@ class YopClient:
 
         self._verify_res_upload(res, post_params)
         try:
-            return json.loads(res.text)
+            return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
             self.logger.warn(res.text)
             pass

@@ -11,7 +11,7 @@ with open("README.rst", "r") as f:
 
 setup(
     name='yop-python-sdk',
-    version='3.3.7',
+    version='3.3.13',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -32,16 +32,18 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Libraries'
     ],
+    # 务必删除 crypto 和 pycrypto
+    # pip3 uninstall crypto
+    # pip3 uninstall pycrypto
+    # pip3 install pycryptodome
     install_requires=[
         'oss2>=2.13.1',
-        'pycrypto>=2.6.1',
+        'pycryptodome>=3.10.1',
         'requests_toolbelt>=0.9',
-        'oss>=0.0.2',
     ],
-    # python_requires='~=2.7,~=3.2',
+    # python_requires='~=2.7,~=3.7',
     setup_requires=[
         'pytest-runner',
     ],

@@ -10,8 +10,8 @@ import logging
 
 def get_logger(logger_name=__name__):
     logger = logging.getLogger(logger_name)
-    # logger.setLevel(logging.INFO)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.DEBUG)
 
     if len(logger.handlers) == 0:
         hdl = logging.StreamHandler()

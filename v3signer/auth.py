@@ -6,10 +6,15 @@
 # @Desc :
 
 from utils import yop_security_utils
-from urllib.parse import quote
+try:
+    # python 3.x
+    from urllib.parse import quote
+except ImportError:
+    # python 2.x
+    from urllib import quote
 import uuid
 import urllib
-import json
+import simplejson
 import hashlib
 import datetime
 import utils.yop_logging_utils as yop_logging_utils
@@ -65,8 +70,6 @@ class SigV3Authenticator:
         yop_date = self._format_iso8601_timestamp()
         expired_seconds = EXPIRATION_IN_SECONDS
 
-        self.logger.debug('generate_signature...\n')
-
         query_str = ''
         if 'GET' == http_method and query_params:
             query_str = self.get_query_str(query_params.items())
@@ -98,7 +101,7 @@ class SigV3Authenticator:
         self.logger.debug('signature:\n{}'.format(signature))
 
         authorization_header = YOP_ALGORITHM + ' ' + auth_str + '/' + \
-            signed_headers + '/' + str(signature, encoding='latin-1')
+            signed_headers + '/' + signature.decode('utf-8')
 
         self.logger.debug('authorization_header:{}'.format(authorization_header))
 
@@ -111,7 +114,7 @@ class SigV3Authenticator:
     def content_sha256(self, json_params):
         sha256 = hashlib.sha256()
         sha256.update(
-            json.dumps(
+            simplejson.dumps(
                 json_params,
                 sort_keys=True,
                 indent=4,

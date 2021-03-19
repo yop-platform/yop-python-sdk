@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 安装 pytest
+#python3 -m pip install pytest
+
 #python3 -m unittest discover test 'test_*.py'
 # pytest --collect-only
 pytest

@@ -6,7 +6,7 @@
 # @Desc :
 from v3signer.credentials import YopCredentials
 import utils.yop_security_utils as security_utils
-import json
+import simplejson
 import utils.yop_logging_utils as yop_logging_utils
 
 
@@ -19,7 +19,7 @@ class YopClientConfig:
     def _init_config(self, config_file):
         # 获取配置文件信息
         with open(config_file, 'r') as f:
-            sdk_config = json.load(f)
+            sdk_config = simplejson.load(f)
             appKey = sdk_config['app_key']
             isv_private_key_list = sdk_config['isv_private_key']
             for isv_private_key in isv_private_key_list:

@@ -5,7 +5,7 @@
 ### Minimum Requirements 最小系统要求
 
 - Python 2.7+
-- Python 3.2+
+- Python 3.5+
 
 ### Install from PyPI 从PyPI安装
 
@@ -15,11 +15,25 @@ python3 用户：
 python3 -m pip install yop-python-sdk
 ```
 
-### Install from source 从源码安装
+
+python2 用户：
 
 ```
-git clone https://github.com/yop-platform/yop-python-sdk.git
-python3 -m pip install ./yop-python-sdk
+python -m pip install yop-python-sdk
+```
+
+### Install from source 从源码安装
+
+python3 用户：
+
+```
+python3 -m pip install git+https://github.com/yop-platform/yop-python-sdk.git
+```
+
+python2 用户：
+
+```
+python -m pip install git+https://github.com/yop-platform/yop-python-sdk.git
 ```
 
 ## Samples
