@@ -11,7 +11,7 @@ with open("README.rst", "r") as f:
 
 setup(
     name='yop-python-sdk',
-    version='3.3.13',
+    version='3.3.16',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -39,6 +39,7 @@ setup(
     # pip3 uninstall pycrypto
     # pip3 install pycryptodome
     install_requires=[
+        'future>=0.18.2',
         'oss2>=2.13.1',
         'pycryptodome>=3.10.1',
         'requests_toolbelt>=0.9',

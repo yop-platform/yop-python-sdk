@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 def success(res):
     if res.__contains__('code'):
         code = res['code']

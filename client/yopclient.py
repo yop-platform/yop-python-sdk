@@ -13,7 +13,7 @@ from utils.yop_config_utils import YopClientConfig
 import utils.yop_security_utils as yop_security_utils
 import utils.yop_logging_utils as yop_logging_utils
 
-SDK_VERSION = '3.3.13'
+SDK_VERSION = '3.3.16'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
