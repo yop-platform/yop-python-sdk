@@ -5,7 +5,6 @@
 # @Date : 18/6/14
 # @Desc :
 
-from past.utils import old_div
 from builtins import range
 from builtins import bytes
 import os
@@ -15,7 +14,7 @@ from Crypto import Random
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
-import oss2
+from utils.crc64 import Crc64
 import utils.yop_logging_utils as yop_logging_utils
 from Crypto.Cipher import AES
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
@@ -62,7 +61,7 @@ def verify_rsa(content, signature, public_key, alg_name=SHA256):
     # RSA 非对称验签
     h = SHA256.new(bytes(content, encoding='utf-8'))
     verifier = PKCS1_v1_5.new(public_key)
-    return verifier.verify(h, signature)
+    return verifier.verify(h, decode_base64(signature))
 
 
 def sign_aes(content, secret_key, alg_name='sha256'):
@@ -132,7 +131,7 @@ def envelope_decrypt(content, private_key, public_key, alg_name=SHA256):
     # 分解参数
     data = data.split('$')
     source_data = data[0]
-    signature = decode_base64(data[1].rstrip('\n'))
+    signature = data[1].rstrip('\n')
     verify_sign = verify_rsa(source_data, signature, public_key, digest_alg)
     if not verify_sign:
         raise Exception("verifySign fail!")
@@ -141,7 +140,7 @@ def envelope_decrypt(content, private_key, public_key, alg_name=SHA256):
 
 def get_random_key_readable(key_size=16):
     # 生成随机密钥
-    ulen = int(old_div(key_size, 4) * 3)
+    ulen = int(key_size // 4 * 3)
     key = base64.b64encode(os.urandom(ulen))
     return key
 
@@ -160,7 +159,7 @@ def encode_base64(data):
     '''
     base64编码
     '''
-    data = base64.b64encode(data)
+    data = base64.urlsafe_b64encode(data)
     for i in range(3):
         if data.endswith('='.encode('latin-1')):
             data = data[:-1]
@@ -168,7 +167,7 @@ def encode_base64(data):
 
 
 def cal_file_crc64(file, block_size=64 * 1024, init_crc=0):
-    crc64 = oss2.utils.Crc64(init_crc)
+    crc64 = Crc64(init_crc)
     file.seek(0)
     while True:
         data = file.read(block_size)

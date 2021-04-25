@@ -6,16 +6,16 @@
 
 from setuptools import find_packages, setup
 
-with open("README.rst", "r") as f:
+with open("README.MD", "r") as f:
     long_description = f.read()
 
 setup(
     name='yop-python-sdk',
-    version='3.3.16',
+    version='3.4.0',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='YOP SDK Common Runtime Team',
+    author='YOP Team',
     author_email='yop@yeepay.com',
     url='https://github.com/yop-platform/yop-python-sdk',
     license='Apache License',
@@ -40,7 +40,6 @@ setup(
     # pip3 install pycryptodome
     install_requires=[
         'future>=0.18.2',
-        'oss2>=2.13.1',
         'pycryptodome>=3.10.1',
         'requests_toolbelt>=0.9',
     ],

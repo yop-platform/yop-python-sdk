@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from v3signer.credentials import YopCredentials
+import asserts.assertion as assertion
 import sys
 sys.path.append("./")
-import asserts.assertion as assertion
-from v3signer.credentials import YopCredentials
 
 
 class Test(object):

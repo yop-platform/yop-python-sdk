@@ -5,7 +5,7 @@ from utils.yop_config_utils import YopClientConfig
 import sys
 sys.path.append("./")
 
-clientConfig = YopClientConfig(config_file='config/yop_sdk_config_qa.json')
+clientConfig = YopClientConfig(config_file='config/yop_sdk_config_rsa_qa.json')
 yop_public_key = clientConfig.get_yop_public_key()
 # isv_private_key = clientConfig.get_credentials().get_priKey()
 

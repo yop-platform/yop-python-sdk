@@ -1,5 +1,7 @@
 # yop-python-sdk
 
+本软件是易宝开放平台（YOP）的 Python 语言 SDK，力争同时支持 Python2/3。
+
 ## Installation 安装方法
 
 ### Minimum Requirements 最小系统要求

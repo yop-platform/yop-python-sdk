@@ -1,0 +1,26 @@
+{
+  "app_key": "yop-boss",
+  "server_root": "http://ycetest.yeepay.com:30228/yop-center",
+  "yos_server_root": "http://ycetest.yeepay.com:30228/yop-center",
+  "sandbox_server_root": "http://ycetest.yeepay.com:30228/yop-center",
+  "yop_public_key": [
+    {
+      "store_type": "string",
+      "cert_type": "SM2",
+      "value":"77c3ac60ee3220535ba05ebc9e4d5897dceab96fceb894a318bcfc62eee5755deba3da466f9834efd85619e119f83a9a1dec776333fb755b90f4a57cd6945adf"
+    }
+  ],
+  "isv_private_key": [
+    {
+      "store_type": "string",
+      "cert_type": "SM2",
+      "value":"92639aaa2cd9aa7f1dffea57afc5091ae747081934e7cb8f793e4fab4b7037a3"
+    }
+  ],
+  "http_client": {
+    "connect_timeout": 10000,
+    "read_timeout": 30000,
+    "max_conn_total": 200,
+    "max_conn_per_route": 100
+  }
+}

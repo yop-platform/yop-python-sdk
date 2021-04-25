@@ -13,7 +13,7 @@ from utils.yop_config_utils import YopClientConfig
 import utils.yop_security_utils as yop_security_utils
 import utils.yop_logging_utils as yop_logging_utils
 
-SDK_VERSION = '3.3.16'
+SDK_VERSION = '3.4.0'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -59,7 +59,7 @@ class YopClient:
         url = ''.join([basePath, api])
         res = self._get_request(url, query_params=query_params, headers=headers)
         self.logger.info(
-            'get url:{}\n headers:{}\n params:{}\n response:{}\n time:{}ms\n'.format(
+            'get url:{}\nheaders:{}\nparams:{}\nresponse:{}\ntime:{}ms\n'.format(
                 url, headers, query_params, res.text, res.elapsed.microseconds / 1000.))
 
         if res.status_code == 400:
@@ -234,9 +234,13 @@ class YopClient:
     def _verify_res_sha256(self, res):
         # 验签
         if res.headers.__contains__('x-yop-sign'):
-            sig_flag = yop_security_utils.verify_rsa(res.text.replace('\t', '').replace('\n', '').replace(' ', ''),
-                                                     res.headers['x-yop-sign'], self.clientConfig.get_yop_public_key())
+            text = res.text.replace('\t', '').replace('\n', '').replace(' ', '')
+            signature = res.headers['x-yop-sign']
+            sig_flag = yop_security_utils.verify_rsa(text, signature, self.clientConfig.get_yop_public_key())
             if not sig_flag:
+                self.logger.info(
+                    'signature verify failed, text:{}, signature:{}'.format(
+                        text, signature, ))
                 raise Exception("sdk.invoke.digest.verify-failure")
 
     def _files_crc64(self, post_params={}):

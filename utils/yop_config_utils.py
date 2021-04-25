@@ -11,7 +11,7 @@ import utils.yop_logging_utils as yop_logging_utils
 
 
 class YopClientConfig:
-    def __init__(self, config_file='config/yop_sdk_config_default.json'):
+    def __init__(self, config_file='config/yop_sdk_config_rsa_default.json'):
         self.logger = yop_logging_utils.get_logger()
         self.config_file = config_file
         self.sdk_config = self._init_config(config_file)
@@ -20,10 +20,10 @@ class YopClientConfig:
         # 获取配置文件信息
         with open(config_file, 'r') as f:
             sdk_config = simplejson.load(f)
-            appKey = sdk_config['app_key']
+            app_key = sdk_config['app_key']
             isv_private_key_list = sdk_config['isv_private_key']
             for isv_private_key in isv_private_key_list:
-                credentials = self._parse_isv_private_key(appKey, isv_private_key)
+                credentials = self._parse_isv_private_key(app_key, isv_private_key)
                 if credentials is not None:
                     sdk_config['credentials'] = credentials
                     break
@@ -39,9 +39,13 @@ class YopClientConfig:
 
     def _parse_isv_private_key(self, appKey, config):
         store_type = config['store_type']
+        cert_type = config['cert_type']
         if 'string' == store_type:
             private_key_string = config['value']
-            private_key = security_utils.parse_pri_key(private_key_string)
+            if cert_type.startswith('RSA'):
+                private_key = security_utils.parse_pri_key(private_key_string)
+            else:
+                private_key = private_key_string
             return YopCredentials(appKey, private_key)
         else:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
@@ -49,9 +53,13 @@ class YopClientConfig:
 
     def _parse_yop_public_key(self, config):
         store_type = config['store_type']
+        cert_type = config['cert_type']
         if 'string' == store_type:
             public_key_string = config['value']
-            yop_public_key = security_utils.parse_pub_key(public_key_string)
+            if cert_type.startswith('RSA'):
+                yop_public_key = security_utils.parse_pub_key(public_key_string)
+            else:
+                yop_public_key = public_key_string
             return yop_public_key
         else:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
