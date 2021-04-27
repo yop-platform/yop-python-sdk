@@ -13,7 +13,7 @@ def pytest_addoption(parser):
     '''
 
     parser.addoption(
-        "--env", action="store", default="prod", help="browser option: local, qa, pro"
+        "--env", action="store", default="prod", help="browser option: local, qa, prod"
     )
     parser.addoption(
         "--cert-type", action="store", default="rsa", help="browser option: sm, rsa"
@@ -26,13 +26,13 @@ def client(request):
     cert_type = request.config.getoption("--cert-type")
     if env == "local":
         print('初始化本地环境的 Yop Client')
-        config_file = 'config/yop_sdk_config_{}_local.json'.format(cert_type)
+        config_file = 'config/yop_sdk_config_{}_{}.json'.format(cert_type, env)
     elif env == "qa":
         print('初始化QA环境的 Yop Client')
-        config_file = 'config/yop_sdk_config_{}_qa.json'.format(cert_type)
+        config_file = 'config/yop_sdk_config_{}_{}.json'.format(cert_type, env)
     else:
         print('初始化生产环境的 Yop Client')
-        config_file = 'config/yop_sdk_config_{}_default.json'.format(cert_type)
+        config_file = 'config/yop_sdk_config_{}_{}.json'.format(cert_type, env)
 
     print('config_file:{}'.format(config_file))
     clientConfig = YopClientConfig(config_file)
