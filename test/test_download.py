@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 sys.path.append("./")
-import os
+import test.assertion as assertion
 from v3signer.credentials import YopCredentials
-import asserts.assertion as assertion
 
 
 class Test(object):

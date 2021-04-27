@@ -9,14 +9,13 @@
 - Python 2.7+
 - Python 3.5+
 
-### Install from PyPI 从PyPI安装
+### Install from PyPI 从 PyPI 安装
 
 python3 用户：
 
 ```
 python3 -m pip install yop-python-sdk
 ```
-
 
 python2 用户：
 
@@ -53,7 +52,7 @@ client = YopClient()
 
 ```
 from client.yopclient import YopClient
-from utils.yop_config_utils import YopClientConfig
+from client.yop_client_config import YopClientConfig
 client = YopClient(YopClientConfig('config/yop_sdk_config_yours.json'))
 ```
 

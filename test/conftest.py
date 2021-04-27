@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from client.yop_client_config import YopClientConfig
+from client.yopclient import YopClient
+import pytest
 import sys
 sys.path.append("./")
-import pytest
-from client.yopclient import YopClient
-from utils.yop_config_utils import YopClientConfig
 
 
 def pytest_addoption(parser):
@@ -33,7 +33,7 @@ def client(request):
     else:
         print('初始化生产环境的 Yop Client')
         config_file = 'config/yop_sdk_config_{}_default.json'.format(cert_type)
-    
+
     print('config_file:{}'.format(config_file))
     clientConfig = YopClientConfig(config_file)
     client = YopClient(clientConfig)

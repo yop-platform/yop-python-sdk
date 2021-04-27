@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_security_utils as yop_security_utils
-
-
 class YopCredentials:
-    def __init__(self, appKey=None, priKey=None):
+    def __init__(self, appKey=None, priKey=None, cert_type='SM2'):
         self.appKey = appKey
-        if isinstance(priKey, str):
-            priKey = yop_security_utils.parse_pri_key(priKey)
         self.priKey = priKey
+        self.cert_type = cert_type
 
     def get_appKey(self):
         return self.appKey
 
     def get_priKey(self):
         return self.priKey
+
+    def get_cert_type(self):
+        return self.cert_type

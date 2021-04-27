@@ -2,6 +2,8 @@
 #!/usr/bin/env python
 
 import os
+from utils.security.rsaencryptor import RsaEncryptor
+from utils.security.smencryptor import SmEncryptor
 import simplejson
 from simplejson.decoder import JSONDecodeError
 import platform
@@ -9,7 +11,7 @@ import locale
 from v3signer.auth import SigV3AuthProvider
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
-from utils.yop_config_utils import YopClientConfig
+from client.yop_client_config import YopClientConfig
 import utils.yop_security_utils as yop_security_utils
 import utils.yop_logging_utils as yop_logging_utils
 
@@ -37,8 +39,18 @@ class YopClient:
         self.logger = yop_logging_utils.get_logger()
         if clientConfig is None:
             clientConfig = YopClientConfig()
+
+        if clientConfig.cert_type.startswith('SM'):
+            self.encryptor = SmEncryptor(
+                clientConfig.get_yop_public_key(),
+                clientConfig.get_credentials().get_priKey())
+        else:
+            self.encryptor = RsaEncryptor(
+                clientConfig.get_yop_public_key(),
+                clientConfig.get_credentials().get_priKey())
+
         self.clientConfig = clientConfig
-        self.authProvider = SigV3AuthProvider()
+        self.authProvider = SigV3AuthProvider(self.encryptor)
 
     def get(self, api, query_params={}, credentials=None, basePath=None):
         if credentials is None:
@@ -236,7 +248,7 @@ class YopClient:
         if res.headers.__contains__('x-yop-sign'):
             text = res.text.replace('\t', '').replace('\n', '').replace(' ', '')
             signature = res.headers['x-yop-sign']
-            sig_flag = yop_security_utils.verify_rsa(text, signature, self.clientConfig.get_yop_public_key())
+            sig_flag = self.encryptor.verify_signature(text, signature)
             if not sig_flag:
                 self.logger.info(
                     'signature verify failed, text:{}, signature:{}'.format(

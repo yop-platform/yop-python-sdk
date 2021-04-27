@@ -6,12 +6,13 @@ import utils.security.encryptor as encryptor
 import utils.yop_logging_utils as yop_logging_utils
 import utils.yop_security_utils as yop_security_utils
 
+
 class SmEncryptor(encryptor.Encryptor):
     '''
     SM 加密机接口
     '''
 
-    def __init__(self, private_key, public_key):
+    def __init__(self, public_key, private_key):
         self.logger = yop_logging_utils.get_logger()
         self.sm2_crypt = sm2.CryptSM2(public_key=public_key, private_key=private_key)
 
@@ -24,7 +25,7 @@ class SmEncryptor(encryptor.Encryptor):
         sign_base64 = yop_security_utils.encode_base64(sign_bytes)
         return sign_base64
 
-    def verify_signature(self, signature, data):
+    def verify_signature(self, data, signature):
         '''
         RSA 非对称验签
         '''

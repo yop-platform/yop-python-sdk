@@ -25,17 +25,19 @@ _SIGV4_TIMESTAMP_FORMAT = "%Y%m%dT%H%M%S"
 
 
 class SigV3AuthProvider:
-    def __init__(self):
+    def __init__(self, encryptor):
         self.logger = yop_logging_utils.get_logger()
         self.session_id = str(uuid.uuid4())
+        self.encryptor = encryptor
 
     def new_authenticator(self):
-        return SigV3Authenticator(self.session_id)
+        return SigV3Authenticator(self.encryptor, self.session_id)
 
 
 class SigV3Authenticator:
-    def __init__(self, session_id=''):
+    def __init__(self, encryptor, session_id=''):
         self.logger = yop_logging_utils.get_logger()
+        self.encryptor = encryptor
         self.session_id = session_id
 
     def _format_iso8601_timestamp(self, date_time=datetime.datetime.utcnow().replace(microsecond=0)):
@@ -92,7 +94,7 @@ class SigV3Authenticator:
 
         auth_str = protocol_version + '/' + app_key + '/' + yop_date + '/' + expired_seconds
         canonical_request = auth_str + '\n' + http_method + '\n' + url + '\n' + query_str + '\n' + canonical_header_str
-        signature = yop_security_utils.sign_rsa(canonical_request, credentials.get_priKey())
+        signature = self.encryptor.signature(canonical_request)
 
         self.logger.debug('canonical_header_str:\n{}'.format(canonical_header_str))
         self.logger.debug('signed_headers:{}'.format(signed_headers))

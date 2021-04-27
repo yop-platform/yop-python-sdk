@@ -2,8 +2,8 @@
 
 import sys
 sys.path.append("./")
-import asserts.assertion as assertion
 from v3signer.credentials import YopCredentials
+import test.assertion as assertion
 
 
 class Test(object):

@@ -46,7 +46,8 @@ class YopClientConfig:
                 private_key = security_utils.parse_pri_key(private_key_string)
             else:
                 private_key = private_key_string
-            return YopCredentials(appKey, private_key)
+
+            return YopCredentials(appKey, private_key, cert_type)
         else:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
             return None
@@ -60,6 +61,8 @@ class YopClientConfig:
                 yop_public_key = security_utils.parse_pub_key(public_key_string)
             else:
                 yop_public_key = public_key_string
+
+            self.cert_type = cert_type
             return yop_public_key
         else:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
