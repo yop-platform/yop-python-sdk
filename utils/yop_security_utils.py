@@ -6,13 +6,8 @@
 # @Desc :
 
 from builtins import range
-from builtins import bytes
 import base64
-import hashlib
 # from Crypto import Random
-from Crypto.Hash import SHA256
-from Crypto.PublicKey import RSA
-from Crypto.Signature import PKCS1_v1_5
 from utils.crc64 import Crc64
 import utils.yop_logging_utils as yop_logging_utils
 
@@ -30,39 +25,6 @@ logger = yop_logging_utils.get_logger(__name__)
 
 # AES根据16位对齐
 BS = 16
-
-
-def parse_pri_key(private_key_string):
-    private_key = '-----BEGIN PRIVATE KEY-----\n' + private_key_string + '\n-----END PRIVATE KEY-----'
-    return RSA.importKey(private_key)
-
-
-def parse_pub_key(public_key_string):
-    public_key = '-----BEGIN PUBLIC KEY-----\n' + public_key_string + '\n-----END PUBLIC KEY-----'
-    return RSA.importKey(public_key)
-
-
-# def verify_rsa(content, signature, public_key, alg_name=SHA256):
-#     # RSA 非对称验签
-#     h = SHA256.new(bytes(content, encoding='utf-8'))
-#     verifier = PKCS1_v1_5.new(public_key)
-#     return verifier.verify(h, decode_base64(signature))
-
-
-def sign_aes(content, secret_key, alg_name='sha256'):
-    # 对称签名
-    to_sign_str = ''.join([secret_key, content, secret_key])
-    __alg_func = getattr(hashlib, alg_name)
-    signature = __alg_func(to_sign_str).hexdigest()
-    return signature
-
-
-def verify_aes(content, signature, secret_key, alg_name='sha256'):
-    # 对称验签
-    to_sign_str = ''.join([secret_key, content, secret_key])
-    __alg_func = getattr(hashlib, alg_name)
-    verify = __alg_func(to_sign_str).hexdigest()
-    return verify == signature
 
 
 def decode_base64(data):
