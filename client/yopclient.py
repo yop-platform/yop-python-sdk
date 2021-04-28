@@ -2,17 +2,18 @@
 #!/usr/bin/env python
 
 import os
-from utils.security.rsaencryptor import RsaEncryptor
-from utils.security.smencryptor import SmEncryptor
+
+from requests.sessions import default_headers
+from security.encryptor.rsaencryptor import RsaEncryptor
+from security.encryptor.smencryptor import SmEncryptor
 import simplejson
 from simplejson.decoder import JSONDecodeError
 import platform
 import locale
-from v3signer.auth import SigV3AuthProvider
+from auth.v3signer.auth import SigV3AuthProvider
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from client.yop_client_config import YopClientConfig
-import utils.yop_security_utils as yop_security_utils
 import utils.yop_logging_utils as yop_logging_utils
 
 SDK_VERSION = '3.4.0'
@@ -35,22 +36,22 @@ USER_AGENT = "/".join(['python',
 class YopClient:
     clientConfig = None
 
-    def __init__(self, clientConfig=None):
+    def __init__(self, clientConfig=None, env=None, cert_type=None):
         self.logger = yop_logging_utils.get_logger()
+        self.env = env
+        self.cert_type = cert_type
         if clientConfig is None:
             clientConfig = YopClientConfig()
 
         if clientConfig.cert_type.startswith('SM'):
-            self.encryptor = SmEncryptor(
-                clientConfig.get_yop_public_key(),
-                clientConfig.get_credentials().get_priKey())
+            self.yop_encryptor = SmEncryptor(
+                public_key_dict=clientConfig.get_yop_public_key())
         else:
-            self.encryptor = RsaEncryptor(
-                clientConfig.get_yop_public_key(),
-                clientConfig.get_credentials().get_priKey())
+            self.yop_encryptor = RsaEncryptor(
+                public_key=clientConfig.get_yop_public_key().values()[0])
 
         self.clientConfig = clientConfig
-        self.authProvider = SigV3AuthProvider(self.encryptor)
+        self.authProvider = SigV3AuthProvider(self.yop_encryptor)
 
     def get(self, api, query_params={}, credentials=None, basePath=None):
         if credentials is None:
@@ -71,13 +72,13 @@ class YopClient:
         url = ''.join([basePath, api])
         res = self._get_request(url, query_params=query_params, headers=headers)
         self.logger.info(
-            'get url:{}\nheaders:{}\nparams:{}\nresponse:{}\ntime:{}ms\n'.format(
-                url, headers, query_params, res.text, res.elapsed.microseconds / 1000.))
+            'request:\nGET {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'.format(
+                url, headers, query_params, res.headers, res.text, res.elapsed.microseconds / 1000.))
 
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        self._verify_res(res)
+        authorization._verify_res(res)
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
@@ -103,13 +104,13 @@ class YopClient:
         url = ''.join([basePath, api])
         res = self._get_request(url, query_params=query_params, headers=headers)
         self.logger.info(
-            'get url:{}\n headers:{}\n params:{}\n time:{}ms\n'.format(
-                url, headers, query_params, res.elapsed.microseconds / 1000.))
+            'request:\nGET {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\ntime:{}ms\n'.format(
+                url, headers, query_params, res.headers, res.elapsed.microseconds / 1000.))
 
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
         if res.status_code >= 500:
-            self._verify_res(res)
+            authorization._verify_res(res)
             try:
                 return simplejson.loads(res.text)
             except JSONDecodeError as identifier:
@@ -125,7 +126,7 @@ class YopClient:
             full_filename = file_path + '/' + filename
             with open(full_filename, "wb+") as file:
                 file.write(res.content)
-                self._verify_res_download(res, file)
+                authorization._verify_res_download(res, file)
             return 0
         except FileNotFoundError as identifier:
             self.logger.warn('找不到文件路径:{}'.format(file_path))
@@ -177,7 +178,7 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        self._verify_res(res)
+        authorization._verify_res(res)
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
@@ -209,64 +210,16 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        self._verify_res_upload(res, post_params)
+        authorization._verify_res_upload(res, post_params)
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
             self.logger.warn(res.text)
             pass
 
-    def _verify_res(self, res, post_params=None):
-        self._verify_res_sha256(res)
-
-    def _verify_res_upload(self, res, post_params=None):
-        self._verify_res_sha256(res)
-
-        # crc64ecma
-        if post_params is not None and res.headers.__contains__('x-yop-hash-crc64ecma'):
-            actual_crc64ecma = self._files_crc64(post_params)
-            expect_crc64ecma = res.headers['x-yop-hash-crc64ecma']
-            if actual_crc64ecma != expect_crc64ecma:
-                self.logger.info(
-                    'crc verify failed, expect_crc64ecma:{}, actual_crc64ecma:{}'.format(
-                        expect_crc64ecma, actual_crc64ecma, ))
-                raise Exception("isv.scene.filestore.put.crc-failed")
-
-    def _verify_res_download(self, res, file):
-        # crc64ecma
-        if res.headers.__contains__('x-yop-hash-crc64ecma'):
-            actual_crc64ecma = str(yop_security_utils.cal_file_crc64(file))
-            expect_crc64ecma = res.headers['x-yop-hash-crc64ecma']
-            if actual_crc64ecma != expect_crc64ecma:
-                self.logger.info(
-                    'crc verify failed, expect_crc64ecma:{}, actual_crc64ecma:{}'.format(
-                        expect_crc64ecma, actual_crc64ecma, ))
-                raise Exception("isv.scene.filestore.get.crc-failed")
-
-    def _verify_res_sha256(self, res):
-        # 验签
-        if res.headers.__contains__('x-yop-sign'):
-            text = res.text.replace('\t', '').replace('\n', '').replace(' ', '')
-            signature = res.headers['x-yop-sign']
-            sig_flag = self.encryptor.verify_signature(text, signature)
-            if not sig_flag:
-                self.logger.info(
-                    'signature verify failed, text:{}, signature:{}'.format(
-                        text, signature, ))
-                raise Exception("sdk.invoke.digest.verify-failure")
-
-    def _files_crc64(self, post_params={}):
-        sorted_items = sorted(post_params.items())
-        crc64ecma = []
-        for k, v in sorted_items:
-            if isinstance(v, tuple):
-                crc64ecma.append(str(yop_security_utils.cal_file_crc64(v[1])))
-
-        return '/'.join(crc64ecma)
-
     def _post_request(self, url, payload=None, params=None, headers={}):
         res = requests.post(url=url, headers=headers, data=payload, params=params)
-        self.logger.info(
-            'get url:{}\n headers:{}\n params:{}\n response:{}\n time:{}ms\n'.format(
-                url, headers, params, res.text, res.elapsed.microseconds / 1000.))
+        self.logger.debug(
+            'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'.format(
+                url, headers, params, res.headers, res.text, res.elapsed.microseconds / 1000.))
         return res

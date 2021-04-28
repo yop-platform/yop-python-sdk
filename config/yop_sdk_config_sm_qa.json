@@ -1,38 +1,39 @@
 {
-  "app_key": "yop-boss",
+  "app_key": "app_100800095600038",
   "server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "yos_server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "sandbox_server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "yop_public_key": [
     {
-      "store_type": "string",
+      "store_type": "file_cer",
       "cert_type": "SM2",
-      "name":"QA SM 证书",
-      "key":"19791495634805870336639420566697069981441064876895811215840904284068948694620",
-      "value":"77c3ac60ee3220535ba05ebc9e4d5897dceab96fceb894a318bcfc62eee5755deba3da466f9834efd85619e119f83a9a1dec776333fb755b90f4a57cd6945adf",
-      "value2":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEd8OsYO4yIFNboF68nk1Yl9zquW/OuJSjGLz8Yu7ldV3ro9pGb5g079hWGeEZ+DqaHex3YzP7dVuQ9KV81pRa3w=="
-    },
-    {
-      "store_type": "string",
-      "cert_type": "SM2",
-      "name":"QA？ SM 证书(硬实现)",
-      "value":"778ed1f7e46f8f82b71ba1d3b9d89d1db6d78b109b4a148af3404519c3bf44ebcaa2d3ccdbef3dafc1587f0b403759dc2e1aee3a6edbf2543efd17cec02d168a",
-      "value2":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEd47R9+Rvj4K3G6HTudidHbbXixCbShSK80BFGcO/ROvKotPM2+89r8FYfwtAN1ncLhruOm7b8lQ+/RfOwC0Wig=="
+      "name":"QA SM 证书(软)",
+      "serial_no":"275568425014",
+      "value":"config/certs/yop_platform_sm_cert_dev_275568425014.cer"
     },
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
-      "value":"config/certs/yop_platform_sm_cert_dev.cer"
+      "name":"QA SM 证书(硬)",
+      "serial_no":"275550212193",
+      "value":"config/certs/yop_platform_sm_cert_dev_275550212193.cer"
     }
   ],
   "isv_private_key": [
     {
       "store_type": "string",
       "cert_type": "SM2",
-      "value":"92639aaa2cd9aa7f1dffea57afc5091ae747081934e7cb8f793e4fab4b7037a3",
-      "value2":"ME0CAQAwEwYHKoZIzj0CAQYIKoEcz1UBgi0EMzAxAgEBBCCSY5qqLNmqfx3/6levxQka50cIGTTny495Pk+rS3A3o6AKBggqgRzPVQGCLQ=="
+      "value":"ME0CAQAwEwYHKoZIzj0CAQYIKoEcz1UBgi0EMzAxAgEBBCCSY5qqLNmqfx3/6levxQka50cIGTTny495Pk+rS3A3o6AKBggqgRzPVQGCLQ=="
     }
   ],
+  "yop_cert_store": {
+    "path":"/tmp/yop/certs"
+  },
+  "isv_encrypt_key": [{
+    "store_type": "string",
+    "cert_type": "SM4",
+    "value": "YURqdEFFY2NSNDFyQjE2cA=="
+  }],
   "http_client": {
     "connect_timeout": 10000,
     "read_timeout": 30000,

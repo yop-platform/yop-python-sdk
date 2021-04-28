@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from client.yop_client_config import YopClientConfig
-from client.yopclient import YopClient
 import pytest
-import sys
-sys.path.append("./")
+from client.yopclient import YopClient
+from client.yop_client_config import YopClientConfig
 
 
 def pytest_addoption(parser):
@@ -36,5 +34,5 @@ def client(request):
 
     print('config_file:{}'.format(config_file))
     clientConfig = YopClientConfig(config_file)
-    client = YopClient(clientConfig)
+    client = YopClient(clientConfig, env, cert_type)
     return client
