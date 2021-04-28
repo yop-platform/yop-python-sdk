@@ -1,5 +1,5 @@
 {
-  "app_key": "yop-boss",
+  "app_key": "app_100276759800009",
   "server_root": "https://openapi.yeepay.com/yop-center",
   "yos_server_root": "https://yos.yeepay.com/yop-center",
   "sandbox_server_root": "https://sandbox.yeepay.com/yop-center",
@@ -7,33 +7,50 @@
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
-      "value":"config/certs/yop_platform_sm_cert_dist.cer"
+      "name":"测试环境 SM 证书(软)",
+      "serial_no":"289798445125",
+      "value":"config/certs/yop_platform_sm_cert_dist_289798445125.cer"
+    },
+    {
+      "store_type": "file_cer",
+      "cert_type": "SM2",
+      "name":"测试环境 SM 证书(硬)",
+      "serial_no":"289782695477",
+      "value":"config/certs/yop_platform_sm_cert_dist_289782695477.cer"
     },
     {
       "store_type": "string",
       "cert_type": "SM2",
-      "name":"PROD SM 证书(软实现)",
-      "ser_id":"289798445125",
-      "value":"49490cb687c07c62248fa043d4adb461c151db8cea9abb9bec86952681ec7f1de5a024d9bca7b15cfa569d863f65bfa63ebdf089eb8b0876ca0741e88a64d30b",
-      "value2":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAESUkMtofAfGIkj6BD1K20YcFR24zqmrub7IaVJoHsfx3loCTZvKexXPpWnYY/Zb+mPr3wieuLCHbKB0HoimTTCw=="
+      "name":"PROD SM 证书(软)",
+      "serial_no":"289798445125",
+      "value2":"49490cb687c07c62248fa043d4adb461c151db8cea9abb9bec86952681ec7f1de5a024d9bca7b15cfa569d863f65bfa63ebdf089eb8b0876ca0741e88a64d30b",
+      "value":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAESUkMtofAfGIkj6BD1K20YcFR24zqmrub7IaVJoHsfx3loCTZvKexXPpWnYY/Zb+mPr3wieuLCHbKB0HoimTTCw=="
     },
     {
       "store_type": "string",
       "cert_type": "SM2",
-      "name":"PROD SM 证书(硬实现)",
-      "ser_id":"289782695477",
-      "value":"778ed1f7e46f8f82b71ba1d3b9d89d1db6d78b109b4a148af3404519c3bf44ebcaa2d3ccdbef3dafc1587f0b403759dc2e1aee3a6edbf2543efd17cec02d168a",
-      "value2":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEd47R9+Rvj4K3G6HTudidHbbXixCbShSK80BFGcO/ROvKotPM2+89r8FYfwtAN1ncLhruOm7b8lQ+/RfOwC0Wig=="
+      "name":"PROD SM 证书(硬)",
+      "serial_no":"289782695477",
+      "value2":"778ed1f7e46f8f82b71ba1d3b9d89d1db6d78b109b4a148af3404519c3bf44ebcaa2d3ccdbef3dafc1587f0b403759dc2e1aee3a6edbf2543efd17cec02d168a",
+      "value":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEd47R9+Rvj4K3G6HTudidHbbXixCbShSK80BFGcO/ROvKotPM2+89r8FYfwtAN1ncLhruOm7b8lQ+/RfOwC0Wig=="
     }
   ],
   "isv_private_key": [
     {
       "store_type": "string",
       "cert_type": "SM2",
-      "value":"92639aaa2cd9aa7f1dffea57afc5091ae747081934e7cb8f793e4fab4b7037a3",
-      "value2":"ME0CAQAwEwYHKoZIzj0CAQYIKoEcz1UBgi0EMzAxAgEBBCCSY5qqLNmqfx3/6levxQka50cIGTTny495Pk+rS3A3o6AKBggqgRzPVQGCLQ=="
+      "value2":"740cafee360044547a0ce1049b556e6b67a2649e2e971197ea544df7862ab64",
+      "value":"MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgB0DK/uNgBEVHoM4QSbVW5rZ6Jkni6XEZfqVE33hiq2SgCgYIKoEcz1UBgi2hRANCAAQQnyX/PqhRYBDdw2uK07m5GNyaBeXbxIPwaA4kxTj6tCSFsTkh2x2tJ4OyVzbJThSmUsvu8do2dWvSRml9tziw"
     }
   ],
+  "yop_cert_store": {
+    "path":"/tmp/yop/certs"
+  },
+  "isv_encrypt_key": [{
+    "store_type": "string",
+    "cert_type": "SM4",
+    "value": "YURqdEFFY2NSNDFyQjE2cA=="
+  }],
   "http_client": {
     "connect_timeout": 10000,
     "read_timeout": 30000,

@@ -73,7 +73,7 @@ api = '/rest/v1.0/pay/bank-limit/query'
 params = {
     'merchantNo': '10000470992'
 }
-credentials = YopCredentials(appKey='<appKey>', priKey='<私钥>')
+credentials = YopCredentials(appKey='<appKey>', cert_type='SM2|RSA2048', priKey='<私钥>')
 res = client.get(api, params, credentials)
 ```
 

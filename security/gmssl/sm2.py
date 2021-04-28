@@ -2,7 +2,7 @@
 
 import binascii
 from random import choice
-from utils.security.gmssl import sm3, func
+from . import sm3, func
 
 # 选择素域，设置椭圆曲线参数
 
@@ -18,9 +18,7 @@ default_ecc_table = {
 
 class CryptSM2(object):
 
-    def __init__(self, private_key, public_key, ecc_table=default_ecc_table):
-        self.private_key = private_key
-        self.public_key = public_key
+    def __init__(self, ecc_table=default_ecc_table):
         self.para_len = len(ecc_table['n'])
         self.ecc_a3 = (
             int(ecc_table['a'], base=16) + 3) % int(ecc_table['p'], base=16)
@@ -145,35 +143,11 @@ class CryptSM2(object):
         else:
             return None
 
-    def verify(self, Sign, data):
-        # 验签函数，sign签名r||s，E消息hash，public_key公钥
-        r = int(Sign[0:self.para_len], 16)
-        s = int(Sign[self.para_len:2 * self.para_len], 16)
-        e = int(binascii.hexlify(data), 16)
-        t = (r + s) % int(self.ecc_table['n'], base=16)
-        if t == 0:
-            return 0
-
-        P1 = self._kg(s, self.ecc_table['g'])
-        P2 = self._kg(t, self.public_key)
-        # print(P1)
-        # print(P2)
-        if P1 == P2:
-            P1 = '%s%s' % (P1, 1)
-            P1 = self._double_point(P1)
-        else:
-            P1 = '%s%s' % (P1, 1)
-            P1 = self._add_point(P1, P2)
-            P1 = self._convert_jacb_to_nor(P1)
-
-        x = int(P1[0:self.para_len], 16)
-        return (r == ((e + x) % int(self.ecc_table['n'], base=16)))
-
-    def sign(self, data, K):  # 签名函数, data消息的hash，private_key私钥，K随机数，均为16进制字符串
+    def sign(self, data, private_key, K):  # 签名函数, data消息的hash，private_key私钥，K随机数，均为16进制字符串
         E = binascii.hexlify(data)  # 消息转化为16进制字符串
         e = int(E, 16)
 
-        d = int(self.private_key, 16)
+        d = int(private_key, 16)
         k = int(K, 16)
 
         P1 = self._kg(k, self.ecc_table['g'])
@@ -189,12 +163,36 @@ class CryptSM2(object):
         else:
             return '%064x%064x' % (R, S)
 
-    def encrypt(self, data):
+    def verify(self, Sign, data, public_key):
+        # 验签函数，sign签名r||s，E消息hash，public_key公钥
+        r = int(Sign[0:self.para_len], 16)
+        s = int(Sign[self.para_len:2 * self.para_len], 16)
+        e = int(binascii.hexlify(data), 16)
+        t = (r + s) % int(self.ecc_table['n'], base=16)
+        if t == 0:
+            return 0
+
+        P1 = self._kg(s, self.ecc_table['g'])
+        P2 = self._kg(t, public_key)
+        # print(P1)
+        # print(P2)
+        if P1 == P2:
+            P1 = '%s%s' % (P1, 1)
+            P1 = self._double_point(P1)
+        else:
+            P1 = '%s%s' % (P1, 1)
+            P1 = self._add_point(P1, P2)
+            P1 = self._convert_jacb_to_nor(P1)
+
+        x = int(P1[0:self.para_len], 16)
+        return (r == ((e + x) % int(self.ecc_table['n'], base=16)))
+
+    def encrypt(self, data, public_key):
         # 加密函数，data消息(bytes)
         msg = data.hex()  # 消息转化为16进制字符串
         k = func.random_hex(self.para_len)
         C1 = self._kg(int(k, 16), self.ecc_table['g'])
-        xy = self._kg(int(k, 16), self.public_key)
+        xy = self._kg(int(k, 16), public_key)
         x2 = xy[0:self.para_len]
         y2 = xy[self.para_len:2 * self.para_len]
         ml = len(msg)
@@ -209,7 +207,7 @@ class CryptSM2(object):
             ])
             return bytes.fromhex('%s%s%s' % (C1, C3, C2))
 
-    def decrypt(self, data):
+    def decrypt(self, data, private_key):
         # 解密函数，data密文（bytes）
         data = data.hex()
         len_2 = 2 * self.para_len
@@ -217,7 +215,7 @@ class CryptSM2(object):
         C1 = data[0:len_2]
         C3 = data[len_2:len_3]
         C2 = data[len_3:]
-        xy = self._kg(int(self.private_key, 16), C1)
+        xy = self._kg(int(private_key, 16), C1)
         # print('xy = %s' % xy)
         x2 = xy[0:self.para_len]
         y2 = xy[self.para_len:len_2]
@@ -233,7 +231,7 @@ class CryptSM2(object):
             ])
             return bytes.fromhex(M)
 
-    def _sm3_z(self, data):
+    def _sm3_z(self, data, public_key):
         """
         SM3WITHSM2 签名规则:  SM2.sign(SM3(Z+MSG)，PrivateKey)
         其中: z = Hash256(Len(ID) + ID + a + b + xG + yG + xA + yA)
@@ -241,20 +239,20 @@ class CryptSM2(object):
         # sm3withsm2 的 z 值
         z = '0080' + '31323334353637383132333435363738' + \
             self.ecc_table['a'] + self.ecc_table['b'] + self.ecc_table['g'] + \
-            self.public_key
+            public_key
         z = binascii.a2b_hex(z)
         Za = sm3.sm3_hash(func.bytes_to_list(z))
         M_ = (Za + binascii.hexlify(data)).encode('utf-8')
         e = sm3.sm3_hash(func.bytes_to_list(binascii.a2b_hex(M_)))
         return e
 
-    def sign_with_sm3(self, data, random_hex_str=None):
-        sign_data = binascii.a2b_hex(self._sm3_z(data).encode('utf-8'))
+    def sign_with_sm3(self, data, public_key, private_key, random_hex_str=None):
+        sign_data = binascii.a2b_hex(self._sm3_z(data, public_key).encode('utf-8'))
         if random_hex_str is None:
             random_hex_str = func.random_hex(self.para_len)
-        sign = self.sign(sign_data, random_hex_str)  # 16进制
+        sign = self.sign(sign_data, private_key, random_hex_str)  # 16进制
         return sign
 
-    def verify_with_sm3(self, sign, data):
-        sign_data = binascii.a2b_hex(self._sm3_z(data).encode('utf-8'))
-        return self.verify(sign, sign_data)
+    def verify_with_sm3(self, sign, data, public_key):
+        sign_data = binascii.a2b_hex(self._sm3_z(data, public_key).encode('utf-8'))
+        return self.verify(sign, sign_data, public_key)

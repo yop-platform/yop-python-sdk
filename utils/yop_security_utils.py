@@ -7,8 +7,8 @@
 
 from builtins import range
 import base64
-# from Crypto import Random
-from utils.crc64 import Crc64
+from Crypto.PublicKey import RSA
+from security.crc64 import Crc64
 import utils.yop_logging_utils as yop_logging_utils
 
 try:
@@ -25,6 +25,16 @@ logger = yop_logging_utils.get_logger(__name__)
 
 # AES根据16位对齐
 BS = 16
+
+
+def parse_rsa_pri_key(private_key_string):
+    private_key = '-----BEGIN PRIVATE KEY-----\n' + private_key_string + '\n-----END PRIVATE KEY-----'
+    return RSA.importKey(private_key)
+
+
+def parse_rsa_pub_key(public_key_string):
+    public_key = '-----BEGIN PUBLIC KEY-----\n' + public_key_string + '\n-----END PUBLIC KEY-----'
+    return RSA.importKey(public_key)
 
 
 def decode_base64(data):

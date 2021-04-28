@@ -12,7 +12,7 @@ class Encryptor:
         self.logger = yop_logging_utils.get_logger()
 
     def signature(self, data):
-        return ""
+        return "", "", ""
 
-    def verify_signature(self, data, signature):
-        return ""
+    def verify_signature(self, data, signature, serial_no=None):
+        return "", "", ""
