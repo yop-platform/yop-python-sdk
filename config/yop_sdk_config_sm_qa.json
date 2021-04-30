@@ -1,5 +1,5 @@
 {
-  "app_key": "app_100800095600038",
+  "app_key": "yop-boss",
   "server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "yos_server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "sandbox_server_root": "http://ycetest.yeepay.com:30228/yop-center",
@@ -17,10 +17,17 @@
       "name":"QA SM 证书(硬)",
       "serial_no":"275550212193",
       "value":"config/certs/yop_platform_sm_cert_dev_275550212193.cer"
+    },
+    {
+      "store_type": "file_cer",
+      "cert_type": "RSA2048",
+      "serial_no":"275718169735",
+      "value":"config/certs/yop_platform_rsa_cert_dev_275718169735.cer"
     }
   ],
   "isv_private_key": [
     {
+      "app_key": "app_100800095600038",
       "store_type": "string",
       "cert_type": "SM2",
       "value":"ME0CAQAwEwYHKoZIzj0CAQYIKoEcz1UBgi0EMzAxAgEBBCCSY5qqLNmqfx3/6levxQka50cIGTTny495Pk+rS3A3o6AKBggqgRzPVQGCLQ=="

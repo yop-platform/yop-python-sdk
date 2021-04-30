@@ -16,7 +16,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 from client.yop_client_config import YopClientConfig
 import utils.yop_logging_utils as yop_logging_utils
 
-SDK_VERSION = '3.4.0'
+SDK_VERSION = '4.0.0-RC1'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -43,15 +43,20 @@ class YopClient:
         if clientConfig is None:
             clientConfig = YopClientConfig()
 
-        if clientConfig.cert_type.startswith('SM'):
-            self.yop_encryptor = SmEncryptor(
-                public_key_dict=clientConfig.get_yop_public_key())
-        else:
-            self.yop_encryptor = RsaEncryptor(
-                public_key=clientConfig.get_yop_public_key().values()[0])
+        # 同时支持RSA、SM两种加密机
+        self.yop_encryptor_dict = {}
+        for cert_type, yop_public_key_dict in clientConfig.sdk_config['yop_public_key'].items():
+            if len(yop_public_key_dict) > 0:
+                self.yop_encryptor_dict[cert_type] = self.get_encryptor(cert_type, yop_public_key_dict)
 
         self.clientConfig = clientConfig
-        self.authProvider = SigV3AuthProvider(self.yop_encryptor)
+        self.authProvider = SigV3AuthProvider(self.yop_encryptor_dict)
+
+    def get_encryptor(self, cert_type, yop_public_key_dict):
+        if 'SM2' == cert_type:
+            return SmEncryptor(public_key_dict=yop_public_key_dict)
+        else:
+            return RsaEncryptor(public_key=yop_public_key_dict.values()[0])
 
     def get(self, api, query_params={}, credentials=None, basePath=None):
         if credentials is None:
@@ -78,7 +83,7 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        authorization._verify_res(res)
+        authorization._verify_res(res, credentials.get_cert_type())
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
@@ -110,7 +115,7 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
         if res.status_code >= 500:
-            authorization._verify_res(res)
+            authorization._verify_res(res, credentials.get_cert_type())
             try:
                 return simplejson.loads(res.text)
             except JSONDecodeError as identifier:
@@ -126,7 +131,7 @@ class YopClient:
             full_filename = file_path + '/' + filename
             with open(full_filename, "wb+") as file:
                 file.write(res.content)
-                authorization._verify_res_download(res, file)
+                authorization._verify_res_download(res, credentials.get_cert_type(), file)
             return 0
         except FileNotFoundError as identifier:
             self.logger.warn('找不到文件路径:{}'.format(file_path))
@@ -178,7 +183,7 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        authorization._verify_res(res)
+        authorization._verify_res(res, credentials.get_cert_type())
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
@@ -210,7 +215,7 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        authorization._verify_res_upload(res, post_params)
+        authorization._verify_res_upload(res, credentials.get_cert_type(), post_params)
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as identifier:
