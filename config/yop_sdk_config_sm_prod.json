@@ -19,24 +19,15 @@
       "value":"config/certs/yop_platform_sm_cert_dist_289782695477.cer"
     },
     {
-      "store_type": "string",
-      "cert_type": "SM2",
-      "name":"PROD SM 证书(软)",
-      "serial_no":"289798445125",
-      "value2":"49490cb687c07c62248fa043d4adb461c151db8cea9abb9bec86952681ec7f1de5a024d9bca7b15cfa569d863f65bfa63ebdf089eb8b0876ca0741e88a64d30b",
-      "value":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAESUkMtofAfGIkj6BD1K20YcFR24zqmrub7IaVJoHsfx3loCTZvKexXPpWnYY/Zb+mPr3wieuLCHbKB0HoimTTCw=="
-    },
-    {
-      "store_type": "string",
-      "cert_type": "SM2",
-      "name":"PROD SM 证书(硬)",
-      "serial_no":"289782695477",
-      "value2":"778ed1f7e46f8f82b71ba1d3b9d89d1db6d78b109b4a148af3404519c3bf44ebcaa2d3ccdbef3dafc1587f0b403759dc2e1aee3a6edbf2543efd17cec02d168a",
-      "value":"MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEd47R9+Rvj4K3G6HTudidHbbXixCbShSK80BFGcO/ROvKotPM2+89r8FYfwtAN1ncLhruOm7b8lQ+/RfOwC0Wig=="
+      "store_type": "file_cer",
+      "cert_type": "RSA2048",
+      "serial_no":"290297451928",
+      "value":"config/certs/yop_platform_rsa_cert_dist_290297451928.cer"
     }
   ],
   "isv_private_key": [
     {
+      "app_key": "app_100276759800009",
       "store_type": "string",
       "cert_type": "SM2",
       "value2":"740cafee360044547a0ce1049b556e6b67a2649e2e971197ea544df7862ab64",

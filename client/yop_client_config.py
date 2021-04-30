@@ -26,8 +26,9 @@ class YopClientConfig:
             yop_public_key_dict = {}
             yop_public_key_list = sdk_config['yop_public_key']
             for yop_public_key_str in yop_public_key_list:
-                yop_public_key, serial_no = self._parse_yop_public_key(yop_public_key_str)
-                yop_public_key_dict[serial_no] = yop_public_key
+                yop_public_key, cert_type, serial_no = self._parse_yop_public_key(yop_public_key_str)
+                dict1 = yop_public_key_dict.setdefault(cert_type, {})
+                dict1[serial_no] = yop_public_key
             sdk_config['yop_public_key'] = yop_public_key_dict
 
             # isv private key
@@ -35,7 +36,7 @@ class YopClientConfig:
             isv_private_key_list = sdk_config['isv_private_key']
             for isv_private_key in isv_private_key_list:
                 credentials = self._parse_isv_private_key(app_key, isv_private_key)
-                credentials_dict[app_key] = credentials
+                credentials_dict[credentials.appKey] = credentials
                 # 仅支持一个私钥，避免请求时不知道用哪个私钥签名
                 if credentials is not None:
                     sdk_config['credentials'] = credentials_dict
@@ -44,8 +45,9 @@ class YopClientConfig:
         return sdk_config
 
     def _parse_isv_private_key(self, appKey, config):
-        store_type = config['store_type']
-        cert_type = config['cert_type']
+        store_type = config.get('store_type', 'string')
+        cert_type = config.get('cert_type', 'RSA2048')
+        appKey = config.get('app_key', appKey)
         if 'string' == store_type:
             private_key_string = config['value']
             if cert_type.startswith('RSA'):
@@ -60,9 +62,9 @@ class YopClientConfig:
             return None
 
     def _parse_yop_public_key(self, config):
-        store_type = config['store_type']
-        cert_type = config['cert_type']
-        serial_no = config.get('serial_no', 'default')
+        store_type = config.get('store_type', 'string')
+        cert_type = config.get('cert_type', 'RSA2048')
+        serial_no = config.get('serial_no', 'unknown')
         if 'string' == store_type:
             public_key_string = config['value']
             if cert_type.startswith('RSA'):
@@ -83,7 +85,7 @@ class YopClientConfig:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
             yop_public_key = None
         self.cert_type = cert_type
-        return yop_public_key, serial_no
+        return yop_public_key, cert_type, serial_no
 
     def cer_analysis(self, ceradd):
         '''

@@ -10,7 +10,9 @@
 
 # 打包
 
-source ~/yop-python-sdk/bin/activate
+/usr/bin/env /usr/bin/python -m virtualenv -p /usr/bin/python2.7 ~/python2
+source ~/python2/bin/activate
+
 python setup.py clean --all
 
 ## 检查setup.py是否有错误

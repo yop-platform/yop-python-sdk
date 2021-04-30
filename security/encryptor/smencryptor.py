@@ -24,28 +24,9 @@ class SmEncryptor(encryptor.Encryptor):
             self.private_key = str(hex(private_key.secret))[2:-1]
             self.public_key = private_key.publicKey().toStr()
 
-        # if private_key is not None:
-        #     if isinstance(private_key, str):
-        #         self.private_key = private_key
-        #     else:
-        #         self.private_key = str(hex(private_key.secret))[2:-1]
-
         # 如果是YOP的加密机
-        self.yop_public_key_dict = public_key_dict
-
-        # if isinstance(private_key, str):
-        #     self.private_key = private_key
-        #     if public_key is None:
-        #         self.public_key = PrivateKey(secret=int(private_key, 16)).publicKey().toStr()
-        #     else:
-        #         self.public_key = public_key
-        # else:
-        #     self.private_key = str(hex(private_key.secret))[2:-1]
-        #     if public_key is None:
-        #         self.public_key = private_key.publicKey().toStr()
-        #     # else:
-        #     #     self.public_key = public_key
-        # self.yop_public_key_dict = public_key_dict
+        if public_key_dict is not None:
+            self.yop_public_key_dict = public_key_dict
 
     def signature(self, data, private_key=None):
         '''
