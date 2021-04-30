@@ -3,13 +3,13 @@
 import pytest
 
 if __name__ == '__main__':
-    # pytest.main(["-s", "test/"])
-    # pytest.main(["-s", "test/", "--cert-type", "sm"])
+    pytest.main(["-s", "test/"])
+    pytest.main(["-s", "test/", "--cert-type", "sm"])
 
     # pytest.main(["-s", "test/test_get.py"])
     # pytest.main(["-s", "test/test_get.py", "--cert-type", "sm"])  # ???
     # pytest.main(["-s", "test/test_get.py", "--env", "qa"])
-    pytest.main(["-s", "test/test_get.py", "--env", "qa", "--cert-type", "sm"])
+    # pytest.main(["-s", "test/test_get.py", "--env", "qa", "--cert-type", "sm"])
 
     # pytest.main(["-s", "test/test_post.py"])  # ???
     # pytest.main(["-s", "test/test_post.py", "--cert-type", "sm"])  # ???

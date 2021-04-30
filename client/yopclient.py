@@ -14,9 +14,9 @@ from auth.v3signer.auth import SigV3AuthProvider
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from client.yop_client_config import YopClientConfig
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 
-SDK_VERSION = '4.0.0-RC1'
+SDK_VERSION = '4.0.0rc2'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -37,7 +37,7 @@ class YopClient:
     clientConfig = None
 
     def __init__(self, clientConfig=None, env=None, cert_type=None):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
         self.env = env
         self.cert_type = cert_type
         if clientConfig is None:

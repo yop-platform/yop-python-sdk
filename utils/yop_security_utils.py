@@ -9,7 +9,7 @@ from builtins import range
 import base64
 from Crypto.PublicKey import RSA
 from security.crc64 import Crc64
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 
 try:
     from importlib import reload
@@ -21,7 +21,7 @@ except ImportError:
 
 # 摘要算法，默认为sha256(参照配置文件)
 
-logger = yop_logging_utils.get_logger(__name__)
+logger = yop_logger.get_logger(__name__)
 
 # AES根据16位对齐
 BS = 16

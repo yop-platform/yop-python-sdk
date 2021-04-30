@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 import security.encryptor.rsaencryptor as RsaEncryptor
 import utils.yop_security_utils as yop_security_utils
 
-logger = yop_logging_utils.get_logger()
+logger = yop_logger.get_logger()
 
 text = u'{\"result\":{\"code\":\"99999\",\"message\":\"\u8c03\u7528NCPay\u67e5\u8be2\u94f6\u884c\u5217\u8868\u5931\u8d25\"}}'
 
