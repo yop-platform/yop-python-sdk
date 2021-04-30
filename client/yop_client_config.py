@@ -6,13 +6,13 @@ import OpenSSL
 from dateutil import parser
 from auth.v3signer.credentials import YopCredentials
 import simplejson
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 from Crypto.PublicKey import RSA
 
 
 class YopClientConfig:
     def __init__(self, config_file='config/yop_sdk_config_rsa_prod.json'):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
         self.config_file = config_file
         self.sdk_config = self._init_config(config_file)
 

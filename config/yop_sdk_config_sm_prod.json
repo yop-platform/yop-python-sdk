@@ -9,20 +9,20 @@
       "cert_type": "SM2",
       "name":"测试环境 SM 证书(软)",
       "serial_no":"289798445125",
-      "value":"config/certs/yop_platform_sm_cert_dist_289798445125.cer"
+      "value":"config/certs/yop_platform_sm_cert_289798445125.cer"
     },
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
       "name":"测试环境 SM 证书(硬)",
       "serial_no":"289782695477",
-      "value":"config/certs/yop_platform_sm_cert_dist_289782695477.cer"
+      "value":"config/certs/yop_platform_sm_cert_289782695477.cer"
     },
     {
       "store_type": "file_cer",
       "cert_type": "RSA2048",
       "serial_no":"290297451928",
-      "value":"config/certs/yop_platform_rsa_cert_dist_290297451928.cer"
+      "value":"config/certs/yop_platform_rsa_cert_290297451928.cer"
     }
   ],
   "isv_private_key": [
@@ -38,6 +38,7 @@
     "path":"/tmp/yop/certs"
   },
   "isv_encrypt_key": [{
+    "app_key": "app_100276759800009",
     "store_type": "string",
     "cert_type": "SM4",
     "value": "YURqdEFFY2NSNDFyQjE2cA=="

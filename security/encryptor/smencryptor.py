@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from auth.certloader.yopcertloader import YopCertLoader
 import binascii
 from ..gmssl import sm2
 from . import encryptor
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 import utils.yop_security_utils as yop_security_utils
-from security.ecdsa.privateKey import PrivateKey
 
 YOP_SM_ALGORITHM = 'YOP-SM2-SM3'
 
@@ -16,7 +16,7 @@ class SmEncryptor(encryptor.Encryptor):
     '''
 
     def __init__(self, private_key=None, public_key_dict=None):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
         self.sm2_crypt = sm2.CryptSM2()
 
         # 如果是商户自己的加密机
@@ -56,6 +56,13 @@ class SmEncryptor(encryptor.Encryptor):
                 if serial_no is None:
                     public_key = self.yop_public_key_dict.values()[0]
                 else:
-                    public_key = self.yop_public_key_dict.get(serial_no)
+                    public_key = self.load_yop_public_key(serial_no)
 
         return self.sm2_crypt.verify_with_sm3(sign_16, data, public_key)
+
+    def load_yop_public_key(self, serial_no):
+        public_key = self.yop_public_key_dict.get(serial_no)
+        if public_key is None:
+            public_key = YopCertLoader.load(serial_no=serial_no)
+            self.yop_public_key_dic[serial_no] = public_key
+        return public_key

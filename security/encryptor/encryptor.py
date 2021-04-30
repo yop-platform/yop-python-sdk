@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 
 
 class Encryptor:
@@ -9,7 +9,7 @@ class Encryptor:
     '''
 
     def __init__(self):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
 
     def signature(self, data):
         return "", "", ""

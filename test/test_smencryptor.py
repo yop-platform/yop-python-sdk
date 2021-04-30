@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 import security.encryptor.smencryptor as SmEncryptor
 from auth.v3signer.credentials import YopCredentials
 
-logger = yop_logging_utils.get_logger()
+logger = yop_logger.get_logger()
 
 text = b"yop-auth-v3/app_100800095600038/2021-04-23T10:35:23Z/1800\nPOST\n/rest/file/upload\n\ncontent-type:application%2Fx-www-form-urlencoded\nx-yop-appkey:app_100800095600038\nx-yop-request-id:c81634dc-9404-4cbe-8ccb-27269a7ced55"
 

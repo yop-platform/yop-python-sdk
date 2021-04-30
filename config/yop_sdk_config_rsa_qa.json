@@ -8,21 +8,21 @@
       "store_type": "file_cer",
       "cert_type": "RSA2048",
       "serial_no":"275718169735",
-      "value":"config/certs/yop_platform_rsa_cert_dev_275718169735.cer"
+      "value":"config/certs/yop_platform_rsa_cert_275718169735.cer"
     },
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
       "name":"QA SM 证书(软)",
       "serial_no":"275568425014",
-      "value":"config/certs/yop_platform_sm_cert_dev_275568425014.cer"
+      "value":"config/certs/yop_platform_sm_cert_275568425014.cer"
     },
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
       "name":"QA SM 证书(硬)",
       "serial_no":"275550212193",
-      "value":"config/certs/yop_platform_sm_cert_dev_275550212193.cer"
+      "value":"config/certs/yop_platform_sm_cert_275550212193.cer"
     }
   ],
   "isv_private_key": [

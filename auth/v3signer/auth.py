@@ -16,7 +16,7 @@ import urllib
 import simplejson
 import hashlib
 import datetime
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 import utils.yop_security_utils as yop_security_utils
 
 EXPIRATION_IN_SECONDS = '1800'
@@ -25,7 +25,7 @@ _SIGV4_TIMESTAMP_FORMAT = "%Y%m%dT%H%M%S"
 
 class SigV3AuthProvider:
     def __init__(self, yop_encryptor_dict):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
         self.session_id = str(uuid.uuid4())
         self.yop_encryptor_dict = yop_encryptor_dict
 
@@ -35,7 +35,7 @@ class SigV3AuthProvider:
 
 class SigV3Authenticator:
     def __init__(self, yop_encryptor_dict, session_id=''):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
         self.yop_encryptor_dict = yop_encryptor_dict
         self.session_id = session_id
 

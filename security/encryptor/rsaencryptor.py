@@ -7,7 +7,7 @@ from Crypto import Random
 from Crypto.Hash import SHA256
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Util.Padding import pad, unpad
-import utils.yop_logging_utils as yop_logging_utils
+import utils.yop_logger as yop_logger
 import utils.yop_security_utils as yop_security_utils
 from builtins import bytes
 from Crypto.Cipher import AES
@@ -26,7 +26,7 @@ class RsaEncryptor(encryptor.Encryptor):
     '''
 
     def __init__(self, private_key=None, public_key=None):
-        self.logger = yop_logging_utils.get_logger()
+        self.logger = yop_logger.get_logger()
         self.private_key = private_key
         self.public_key = public_key
 
