@@ -30,7 +30,7 @@ class SmEncryptor(encryptor.Encryptor):
 
     def signature(self, data, private_key=None):
         '''
-        RSA 非对称签名
+        SM 非对称签名
         '''
         if private_key is None:
             private_key = self.private_key
@@ -42,13 +42,13 @@ class SmEncryptor(encryptor.Encryptor):
 
     def verify_signature(self, data, signature, public_key=None, serial_no=None):
         '''
-        RSA 非对称验签
+        SM 非对称验签
         '''
         sign_bytes = yop_security_utils.decode_base64(signature)
         sign_16 = binascii.hexlify(sign_bytes)
 
         if public_key is None:
-            if self.yop_public_key_dict is None:
+            if not hasattr(self, 'yop_public_key_dict') or self.yop_public_key_dict is None:
                 public_key = self.public_key
             elif not isinstance(self.yop_public_key_dict, dict):
                 public_key = self.yop_public_key_dict

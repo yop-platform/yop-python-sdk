@@ -20,7 +20,7 @@ class YopClientConfig:
         # 获取配置文件信息
         with open(config_file, 'r') as f:
             sdk_config = simplejson.load(f)
-            app_key = sdk_config['app_key']
+            app_key = sdk_config.get('app_key', '')
 
             # platform public key
             yop_public_key_dict = {}
@@ -84,7 +84,7 @@ class YopClientConfig:
         else:
             self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
             yop_public_key = None
-        self.cert_type = cert_type
+
         return yop_public_key, cert_type, serial_no
 
     def cer_analysis(self, ceradd):

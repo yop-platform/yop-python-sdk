@@ -79,6 +79,12 @@ res = client.get(api, params, credentials)
 
 更多用法，请参考 test 目录下面的单元测试。
 
-# License 协议
+## Contributing
 
-This library is licensed under the Apache 2.0 License.
+Contributions are welcome! Check out the [Contribution Guide](CONTRIBUTING.md).
+
+## License 协议
+
+The code in this project is released under the [Apache 2.0](LICENSE).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyop-platform%2Fyop-python-sdk.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyop-platform%2Fyop-python-sdk?ref=badge_large)
