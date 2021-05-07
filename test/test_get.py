@@ -12,16 +12,15 @@ class Test(object):
         }
         res = client.get(api, params)
         if 'prod' == client.env:
-            assertion.success(res)
-            assert '99999' == res['result']['code']
-            # assert '00205' == res['result']['code']
+            if 'sm' == client.cert_type:
+                assertion.failure(res, '40029')
+            else:
+                assertion.success(res)
+                assert '99999' == res['result']['code']
         else:
             assert '40042' == res['code']
 
     def test_get_with_rsa_credentials(self, client):
-        if 'sm' == client.cert_type:
-            return
-
         api = '/rest/v1.0/cnppay/bank-limit/query'
         params = {
             'merchantNo': '10000470992'
@@ -32,7 +31,6 @@ class Test(object):
         res = client.get(api, params, credentials)
         if 'prod' == client.env:
             assertion.success(res)
-            # assert '00205' == res['result']['code']
             assert '99999' == res['result']['code']
         else:
             assert '40042' == res['code']
