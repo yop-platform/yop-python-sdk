@@ -25,10 +25,13 @@ class Test(object):
         }
         res = client.post(api, params)
         if 'prod' == client.env:
-            assert 'OPR00058' == res['result']['code']
-            assertion.success(res)
+            if 'sm' == client.cert_type:
+                assertion.failure(res, '40029')
+            else:
+                assert 'OPR10008' == res['result']['code']
+            # assertion.success(res)
         else:
-            assert '40042' == res['code']
+            assertion.failure(res, '40042')
 
     def test_post_with_credentials(self, client):
         if 'sm' == client.cert_type:
@@ -56,10 +59,10 @@ class Test(object):
                                      cert_type='RSA2048')
         res = client.post(api, params, credentials)
         if 'prod' == client.env:
-            assert 'OPR00058' == res['result']['code']
+            assert 'OPR10008' == res['result']['code']
             assertion.success(res)
         else:
-            assert '40042' == res['code']
+            assertion.failure(res, '40042')
 
     def test_post_failed(self, client):
         api = '/rest/v1.0/trade/order'
@@ -73,7 +76,10 @@ class Test(object):
         res = client.post(api, params)
         # assert 'OPR00058' == res['result']['code']
         if 'prod' == client.env:
-            assertion.failure(res, '40021')
+            if 'sm' == client.cert_type:
+                assertion.failure(res, '40029')
+            else:
+                assert 'OPR10008' == res['result']['code']
         else:
             assertion.failure(res, '40042')
 

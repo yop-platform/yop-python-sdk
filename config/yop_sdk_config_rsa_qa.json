@@ -1,5 +1,4 @@
 {
-  "app_key": "yop-boss",
   "server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "yos_server_root": "http://ycetest.yeepay.com:30228/yop-center",
   "sandbox_server_root": "http://ycetest.yeepay.com:30228/yop-center",

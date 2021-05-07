@@ -44,7 +44,7 @@ class Test(object):
 
         encryptor = RsaEncryptor(
             isv_private_key,
-            clientConfig.get_yop_public_key().values()[0])
+            clientConfig.get_yop_public_key().get('RSA2048').values()[0])
 
         plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
         print('plain:{}'.format(plain))

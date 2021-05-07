@@ -27,11 +27,11 @@ class Test(object):
         assert result
 
     def test_sign_yop(self, client):
-        if 'sm' == client.cert_type:
+        if 'sm' == client.cert_type or 'qa' == client.env:
             return
 
         clientConfig = client.clientConfig
-        yop_public_key = clientConfig.get_yop_public_key().values()[0]
+        yop_public_key = clientConfig.get_yop_public_key().get('RSA2048').values()[0]
         isv_private_key = clientConfig.get_credentials().get_priKey()
         encryptor = RsaEncryptor.RsaEncryptor(isv_private_key, yop_public_key)
         # signature_16, algorithm, hash_algorithm = encryptor.signature(text)
