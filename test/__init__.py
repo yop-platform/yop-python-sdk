@@ -4,15 +4,17 @@ import pytest
 
 if __name__ == '__main__':
     pytest.main(["-s", "test/"])
-    pytest.main(["-s", "test/", "--cert-type", "sm"])
+    # pytest.main(["-s", "test/", "--env", "qa"]) // upload & download
+    # pytest.main(["-s", "test/", "--cert-type", "sm"])
+    # pytest.main(["-s", "test/", "--env", "qa", "--cert-type", "sm"])
 
     # pytest.main(["-s", "test/test_get.py"])
-    # pytest.main(["-s", "test/test_get.py", "--cert-type", "sm"])  # ???
+    # pytest.main(["-s", "test/test_get.py", "--cert-type", "sm"])
     # pytest.main(["-s", "test/test_get.py", "--env", "qa"])
     # pytest.main(["-s", "test/test_get.py", "--env", "qa", "--cert-type", "sm"])
 
-    # pytest.main(["-s", "test/test_post.py"])  # ???
-    # pytest.main(["-s", "test/test_post.py", "--cert-type", "sm"])  # ???
+    # pytest.main(["-s", "test/test_post.py"])
+    # pytest.main(["-s", "test/test_post.py", "--cert-type", "sm"])
     # pytest.main(["-s", "test/test_post.py", "--env", "qa"])  # 40042
     # pytest.main(["-s", "test/test_post.py", "--env", "qa", "--cert-type", "sm"])
 
@@ -30,6 +32,7 @@ if __name__ == '__main__':
     # pytest.main(["-s", "test/test_rsa_envelope.py", "--env", "qa"])
 
     # pytest.main(["-s", "test/test_rsaencryptor.py"])  # 测试用例只适用于生产环境
+    # pytest.main(["-s", "test/test_rsaencryptor.py", "--env", "qa"])
 
     # pytest.main(["-s", "test/test_smencryptor.py", "--cert-type", "sm"])
     # pytest.main(["-s", "test/test_smencryptor.py", "--env", "qa", "--cert-type", "sm"])

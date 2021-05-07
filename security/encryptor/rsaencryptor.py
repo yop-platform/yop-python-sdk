@@ -54,6 +54,8 @@ class RsaEncryptor(encryptor.Encryptor):
         '''
         if public_key is None:
             public_key = self.public_key
+        elif public_key is dict and serial_no is not None:
+            public_key = public_key.get(serial_no)
 
         h = SHA256.new(bytes(data, encoding='utf-8'))
         verifier = PKCS1_v1_5.new(public_key)
