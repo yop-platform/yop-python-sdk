@@ -11,7 +11,7 @@ with open("README.MD", "r") as f:
 
 setup(
     name='yop-python-sdk',
-    version='4.0.0rc4',
+    version='4.0.0rc5',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',

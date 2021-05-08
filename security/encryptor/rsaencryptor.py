@@ -6,7 +6,7 @@ from . import encryptor
 from Crypto import Random
 from Crypto.Hash import SHA256
 from Crypto.Signature import PKCS1_v1_5
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Util.Padding import pad
 import utils.yop_logger as yop_logger
 import utils.yop_security_utils as yop_security_utils
 from builtins import bytes
@@ -114,7 +114,11 @@ class RsaEncryptor(encryptor.Encryptor):
             raise Exception("isv private key is illegal!")
 
         cipher = AES.new(random_key, AES.MODE_ECB)
-        data = unpad(cipher.decrypt(encrypted_data), BLOCK_SIZE)
+        data = cipher.decrypt(encrypted_data)
+
+        # 对 pkcs7 格式的数据做特殊处理
+        # data = unpad(data, BLOCK_SIZE)
+        data = data[:-ord(data[-1])]
 
         # 分解参数
         data = data.split('$')

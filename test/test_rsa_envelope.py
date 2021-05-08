@@ -50,3 +50,19 @@ class Test(object):
         print('plain:{}'.format(plain))
 
         assert plain == content
+
+    def test_envelope_notify_unpad(self, client):
+        if 'sm' == client.cert_type:
+            return
+
+        content = '{"date":"20181014000000","aaa":"","boolean":true,"SIZE":-14,"name":"易宝支付","dou":12.134}'
+        response = 'ftjjTgrMrdS3aovlxxRa1GQiEuh4VUw8UhfhtV1yahhfvmpoVpn56wjMSW_Hr5BcXFylw08oBxRkHw0QgltrNGuzcmoyXhcP3LJUYcypMjf24YVryOtxdaAqsuTdhcsb6nBpvPfWTPvQiQ0QNmB_cCZSqaHNlj7iq3MtGnO6e5xFZNs4aUc9C1NtWNZc-NMTJaKV9XYVUD0UTmRZeGio8kD7BkcNGMwmLv32FEUzqFFVKXURXRikFVWLZ_d0gw1k8ewvblJM_OFL7SZYMy8uPxFLKX8qGTWZhOdgnZX1T3Pzkf-C34yA8oVcUaSkCFMgsSt9SfK8y-mvOgamylNdow$oIQRJRwIeMNYBbI1EQKqlfly0KD1PV-oyN4IXkVl6iJ_xkjorLoLgykDcCtkVPJaPid-GIei1Px3uBE3TeGxxm06D1uzlGTpPgoaBB71dQ-efWGIJ2OLB7L25Y4IQlMXcQG11tR7GDGu7EvVI9SP52_mQxYqxh7dZBPz-Mqs11H3HqJSN7sJvh727ksRAuIv5TRI2EONoahvRENZ2diqC1sU0Tsl2FvDcKkkDU-e5O6jP8sYAbY0KBrCS_Cf40jay9MrM2knKHU6e0EvPRlkx9jqtzhUOpFS_wvbVdHRkKMFvGANhqa3rWdrMPOzKRiRRmLFUd5htoeYcdod002EJ_ltDRG-cueLXddKiJVCmWdOTGjY2OYQhVZ8N1-Y9eiRVsi0twKkPKHh0AnEPiR6KLhu0ds_pNWcheFox1N4KYqrRvObPc1AR5-4uzfIhOsaqiAmuBlMGX45LH9IvY0qwUun0oFHwtIt_PAyCQiCb47kaBf-zAbbPss0dEsGjGMZT1gO2TzBE1D6rBN3GHH_ye8WgefbGXgSZaKlvVy0mdoVNEtwyeJkFswpMNc7UlXT42yZkZIBLSziORZEFUmhrPNh5hIsxLxRR5-JKG0C8yiAjZNxjUkXCZ9UUSWwoVphrLJtyF2eee5RecMMyfYE8lO3jU47DF66Ol3c1WO2FWcIdgkHomhEMttDxsAn3kbrEwUCrfn8Bf4rvNv-R1j2aM9lkk30Amc7sMcjRTBXNfuuwCGtCNXRBONWqVclhIW8V2EuRFztPx3o7aby7zDMMrHhs3i-zT9tFQvwj2us3oxD_lM9hKCH2RVrNa-BCwxXqM7a6do5Yp-0vi0g_IvVkOBX0JFm9cAmix4Dx1yxa7SRukxOLT-EVefpLTsdXfrxZSSTxjdjk9jancfIeETmFyPsJdIJgETYLzrYF6SqOw-lyklsX1kM6_uxj0keKC3ZLkJXic5NhDM2yDQSsbD-Ru36FYyjqg5-VuUBKXubkEtUH4LYIlXQzrrDZ92wurlxrJnlVMrHpDI7Y1LQW1QXDVduETqo8A1-dlGDWmL1EWHiwI9fx0vWpaHe9j5ByilnxJli82LkstPjAA5Do5_my1adhD1UrljLv7BpISicU8MRHIt7t533nvKLLGvlCDLhHP15BI9lSerbL4NOaArJoQ$AES$SHA256'
+
+        encryptor = RsaEncryptor(
+            isv_private_key,
+            clientConfig.get_yop_public_key().get('RSA2048').values()[0])
+
+        plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
+        print('plain:{}'.format(plain))
+
+        assert plain == content
