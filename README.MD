@@ -11,46 +11,57 @@
 
 ### Install from PyPI 从 PyPI 安装
 
-python3 用户：
+## 生成虚拟环境
 
-```
-python3 -m pip install yop-python-sdk
+```shell
+pip install virtualenv
+
+# rm -rf ~/python2
+/usr/bin/env /usr/bin/python -m virtualenv -p /usr/bin/python2.7 ~/python2
+source ~/python2/bin/activate
 ```
 
-python2 用户：
+## 安装 yop-python-sdk
 
-```
+### 从仓库安装最新版本
+
+```shell
 python -m pip install yop-python-sdk
 ```
 
-### Install from source 从源码安装
+### 从指定仓库安装指定的版本
 
-python3 用户：
-
-```
-python3 -m pip install git+https://github.com/yop-platform/yop-python-sdk.git
+```shell
+python -m pip install --upgrade --index-url https://pypi.org/simple yop-python-sdk==3.3.12
 ```
 
-python2 用户：
+### Install from source 从源码安装(不推荐)
 
-```
+```shell
 python -m pip install git+https://github.com/yop-platform/yop-python-sdk.git
 ```
 
-## Samples
+或者
 
-### How to init YopClient 如何初始化 YopClient
+```shell
+git clone git@github.com:yop-platform/yop-python-sdk.git --depth=1
+python setup.py install
+```
+
+## Samples 示例
+
+### How to use 如何初始化 YopClient
 
 采用默认配置文件：
 
-```
+```python
 from client.yopclient import YopClient
 client = YopClient()
 ```
 
 采用指定的配置文件：
 
-```
+```python
 from client.yopclient import YopClient
 from client.yop_client_config import YopClientConfig
 client = YopClient(YopClientConfig('config/yop_sdk_config_yours.json'))
@@ -58,26 +69,33 @@ client = YopClient(YopClientConfig('config/yop_sdk_config_yours.json'))
 
 Configure file Configure YopCredentials 采用配置文件中指定的 appKey 和私钥发起请求：
 
-```
+```python
 api = '/rest/v1.0/pay/bank-limit/query'
 params = {
     'merchantNo': '10000470992'
 }
-res = client.get(api, params)
+res = client.get(api=api, params=params)
 ```
 
 Programmatically Configure YopCredentials 编码指定的 appKey 和私钥发起请求：
 
-```
+```python
 api = '/rest/v1.0/pay/bank-limit/query'
 params = {
     'merchantNo': '10000470992'
 }
 credentials = YopCredentials(appKey='<appKey>', cert_type='SM2|RSA2048', priKey='<私钥>')
-res = client.get(api, params, credentials)
+res = client.get(api=api, params=params, credentials=credentials)
 ```
 
 更多用法，请参考 test 目录下面的单元测试。
+
+### crypto 相关的报错如何解决
+
+```shell
+python -m pip uninstall crypto pycrypto pycryptodome yop-python-sdk
+python -m pip install pycryptodome
+```
 
 ## Contributing
 

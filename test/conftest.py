@@ -34,5 +34,5 @@ def client(request):
 
     print('config_file:{}'.format(config_file))
     clientConfig = YopClientConfig(config_file)
-    client = YopClient(clientConfig, env, cert_type)
+    client = YopClient(clientConfig, cert_type, env)
     return client
