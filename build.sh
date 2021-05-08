@@ -1,17 +1,4 @@
-# 准备工作
-
-## 确保您拥有setuptools并wheel 安装了最新版本
-# python3 -m pip install --user --upgrade setuptools wheel twine
-
-# python -m pip uninstall crypto pycrypto pycryptodome yop-python-sdk
-# python3 -m pip uninstall crypto pycrypto pycryptodome yop-python-sdk
-# /Users/dreambt/Library/Python/2.7/bin/pip uninstall crypto pycrypto pycryptodome yop-python-sdk
-# /Users/dreambt/Library/Python/2.7/bin/pip install pycryptodome
-
-# 打包
-
-/usr/bin/env /usr/bin/python -m virtualenv -p /usr/bin/python2.7 ~/python2
-source ~/python2/bin/activate
+# 打包发布
 
 python setup.py clean --all
 
@@ -30,14 +17,8 @@ python setup.py bdist_wheel --universal
 # 发布
 
 ## 发布到
-# twine upload dist/*
+python -m pip install --user --upgrade setuptools wheel twine
 python -m twine upload dist/*
-
-
-# python -m pip install yop-python-sdk
-
-# python -m pip install --upgrade --index-url https://pypi.org/simple yop-python-sdk==3.3.12
-
 
 # /Users/dreambt/Library/Python/2.7/bin/pytest -v
 # pytest -v
