@@ -7,14 +7,14 @@
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
-      "name":"测试环境 SM 证书(软)",
+      "name":"正式环境 SM 证书(软)",
       "serial_no":"289798445125",
       "value":"config/certs/yop_platform_sm_cert_289798445125.cer"
     },
     {
       "store_type": "file_cer",
       "cert_type": "SM2",
-      "name":"测试环境 SM 证书(硬)",
+      "name":"正式环境 SM 证书(硬)",
       "serial_no":"289782695477",
       "value":"config/certs/yop_platform_sm_cert_289782695477.cer"
     },

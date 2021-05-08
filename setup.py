@@ -11,7 +11,7 @@ with open("README.MD", "r") as f:
 
 setup(
     name='yop-python-sdk',
-    version='4.0.0rc3',
+    version='4.0.0rc4',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -41,7 +41,7 @@ setup(
     install_requires=[
         'future>=0.18.2',
         'pycryptodome>=3.10.1',
-        'requests_toolbelt>=0.9',
+        'requests_toolbelt>=0.9.1',
     ],
     # python_requires='~=2.7,~=3.7',
     setup_requires=[
