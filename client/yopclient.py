@@ -16,7 +16,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 from client.yop_client_config import YopClientConfig
 import utils.yop_logger as yop_logger
 
-SDK_VERSION = '4.0.0rc3'
+SDK_VERSION = '4.0.0rc4'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -36,7 +36,7 @@ USER_AGENT = "/".join(['python',
 class YopClient:
     clientConfig = None
 
-    def __init__(self, clientConfig=None, env=None, cert_type=None):
+    def __init__(self, clientConfig=None, cert_type=None, env=None):
         self.logger = yop_logger.get_logger()
         self.env = env
         self.cert_type = cert_type
