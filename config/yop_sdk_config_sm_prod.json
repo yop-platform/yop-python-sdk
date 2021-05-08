@@ -1,0 +1,51 @@
+{
+  "app_key": "app_100276759800009",
+  "server_root": "https://openapi.yeepay.com/yop-center",
+  "yos_server_root": "https://yos.yeepay.com/yop-center",
+  "sandbox_server_root": "https://sandbox.yeepay.com/yop-center",
+  "yop_public_key": [
+    {
+      "store_type": "file_cer",
+      "cert_type": "SM2",
+      "name":"正式环境 SM 证书(软)",
+      "serial_no":"289798445125",
+      "value":"config/certs/yop_platform_sm_cert_289798445125.cer"
+    },
+    {
+      "store_type": "file_cer",
+      "cert_type": "SM2",
+      "name":"正式环境 SM 证书(硬)",
+      "serial_no":"289782695477",
+      "value":"config/certs/yop_platform_sm_cert_289782695477.cer"
+    },
+    {
+      "store_type": "file_cer",
+      "cert_type": "RSA2048",
+      "serial_no":"290297451928",
+      "value":"config/certs/yop_platform_rsa_cert_290297451928.cer"
+    }
+  ],
+  "isv_private_key": [
+    {
+      "app_key": "app_100276759800009",
+      "store_type": "string",
+      "cert_type": "SM2",
+      "value":"MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgB0DK/uNgBEVHoM4QSbVW5rZ6Jkni6XEZfqVE33hiq2SgCgYIKoEcz1UBgi2hRANCAAQQnyX/PqhRYBDdw2uK07m5GNyaBeXbxIPwaA4kxTj6tCSFsTkh2x2tJ4OyVzbJThSmUsvu8do2dWvSRml9tziw"
+    }
+  ],
+  "yop_cert_store": {
+    "path":"/tmp/yop/certs"
+  },
+  "isv_encrypt_key": [{
+    "app_key": "app_100276759800009",
+    "store_type": "string",
+    "cert_type": "SM4",
+    "value": "YURqdEFFY2NSNDFyQjE2cA=="
+  }],
+  "http_client": {
+    "connect_timeout": 10000,
+    "read_timeout": 30000,
+    "max_conn_total": 200,
+    "max_conn_per_route": 100
+  }
+}
