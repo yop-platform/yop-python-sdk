@@ -2,7 +2,7 @@
 
 from .base import Base64
 from .binary import BinaryAscii
-from .compatibility import *
+from .compatibility import toBytes, intTypes, toString, xrange
 
 
 hexAt = "\x00"

@@ -36,7 +36,7 @@ def sm3_gg_j(x, y, z, j):
     if 0 <= j and j < 16:
         ret = x ^ y ^ z
     elif 16 <= j and j < 64:
-        #ret = (X | Y) & ((2 ** 32 - 1 - X) | Z)
+        # ret = (X | Y) & ((2 ** 32 - 1 - X) | Z)
         ret = (x & y) | ((~ x) & z)
     return ret
 

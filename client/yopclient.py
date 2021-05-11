@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 
 import os
-
-from requests.sessions import default_headers
 from security.encryptor.rsaencryptor import RsaEncryptor
 from security.encryptor.smencryptor import SmEncryptor
 import simplejson
@@ -16,7 +13,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 from client.yop_client_config import YopClientConfig
 import utils.yop_logger as yop_logger
 
-SDK_VERSION = '4.0.0rc5'
+SDK_VERSION = '4.0.0rc6'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -56,7 +53,7 @@ class YopClient:
         if 'SM2' == cert_type:
             return SmEncryptor(public_key_dict=yop_public_key_dict)
         else:
-            return RsaEncryptor(public_key=yop_public_key_dict.values()[0])
+            return RsaEncryptor(public_key=list(yop_public_key_dict.values())[0])
 
     def get(self, api, query_params={}, credentials=None, basePath=None):
         if credentials is None:
@@ -86,9 +83,9 @@ class YopClient:
         authorization._verify_res(res, credentials.get_cert_type())
         try:
             return simplejson.loads(res.text)
-        except JSONDecodeError as identifier:
+        except JSONDecodeError as e:
             self.logger.warn(res.text)
-            pass
+            raise e
 
     def download(self, api, query_params={}, credentials=None, basePath=None, file_path=None):
         if credentials is None:
@@ -118,9 +115,9 @@ class YopClient:
             authorization._verify_res(res, credentials.get_cert_type())
             try:
                 return simplejson.loads(res.text)
-            except JSONDecodeError as identifier:
+            except JSONDecodeError as e:
                 self.logger.warn(res.text)
-                pass
+                raise e
 
         filename = res.headers['Content-Disposition'].split('; ')[1].replace('filename=', '')
         filename = filename[filename.rindex('/') + 1:len(filename)]
@@ -133,8 +130,9 @@ class YopClient:
                 file.write(res.content)
                 authorization._verify_res_download(res, credentials.get_cert_type(), file)
             return 0
-        except FileNotFoundError as identifier:
+        except OSError as e:
             self.logger.warn('找不到文件路径:{}'.format(file_path))
+            raise e
         else:
             return 1
 
@@ -186,9 +184,9 @@ class YopClient:
         authorization._verify_res(res, credentials.get_cert_type())
         try:
             return simplejson.loads(res.text)
-        except JSONDecodeError as identifier:
+        except JSONDecodeError as e:
             self.logger.warn(res.text)
-            pass
+            raise e
 
     def upload(self, api, post_params={}, credentials=None, basePath=None):
         if credentials is None:
@@ -218,9 +216,9 @@ class YopClient:
         authorization._verify_res_upload(res, credentials.get_cert_type(), post_params)
         try:
             return simplejson.loads(res.text)
-        except JSONDecodeError as identifier:
+        except JSONDecodeError as e:
             self.logger.warn(res.text)
-            pass
+            raise e
 
     def _post_request(self, url, payload=None, params=None, headers={}):
         res = requests.post(url=url, headers=headers, data=payload, params=params)

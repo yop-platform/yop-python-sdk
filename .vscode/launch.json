@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python3",
+            "name": "Python",
             "type": "python",
             "request": "launch",
             "program": "${file}",

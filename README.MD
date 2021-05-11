@@ -15,9 +15,21 @@
 
 ```shell
 pip install virtualenv
+```
 
+### For python3
+
+```shell
+# rm -rf ~/python3
+/usr/bin/env /usr/bin/python3 -m virtualenv ~/python3
+source ~/python3/bin/activate
+```
+
+### For python2
+
+```shell
 # rm -rf ~/python2
-/usr/bin/env /usr/bin/python -m virtualenv -p /usr/bin/python2.7 ~/python2
+/usr/bin/env /usr/bin/python -m virtualenv -p ~/python2
 source ~/python2/bin/activate
 ```
 

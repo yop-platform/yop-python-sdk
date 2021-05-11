@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import binascii
-from random import choice
 from . import sm3, func
 
 # 选择素域，设置椭圆曲线参数
@@ -17,7 +16,6 @@ default_ecc_table = {
 
 
 class CryptSM2(object):
-
     def __init__(self, ecc_table=default_ecc_table):
         self.para_len = len(ecc_table['n'])
         self.ecc_a3 = (
@@ -213,12 +211,12 @@ class CryptSM2(object):
         len_2 = 2 * self.para_len
         len_3 = len_2 + 64
         C1 = data[0:len_2]
-        C3 = data[len_2:len_3]
+        # C3 = data[len_2:len_3]
         C2 = data[len_3:]
         xy = self._kg(int(private_key, 16), C1)
         # print('xy = %s' % xy)
-        x2 = xy[0:self.para_len]
-        y2 = xy[self.para_len:len_2]
+        # x2 = xy[0:self.para_len]
+        # y2 = xy[self.para_len:len_2]
         cl = len(C2)
         t = sm3.sm3_kdf(xy.encode('utf8'), cl / 2)
         if int(t, 16) == 0:
@@ -226,9 +224,9 @@ class CryptSM2(object):
         else:
             form = '%%0%dx' % cl
             M = form % (int(C2, 16) ^ int(t, 16))
-            u = sm3.sm3_hash([
-                i for i in bytes.fromhex('%s%s%s' % (x2, M, y2))
-            ])
+            # u = sm3.sm3_hash([
+            #     i for i in bytes.fromhex('%s%s%s' % (x2, M, y2))
+            # ])
             return bytes.fromhex(M)
 
     def _sm3_z(self, data, public_key):

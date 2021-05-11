@@ -17,23 +17,23 @@ isv_public_key = yop_security_utils.parse_rsa_pub_key(
 
 
 class Test(object):
-    def test_envelope_self(self, client):
-        if 'sm' == client.cert_type:
-            return
+    # def test_envelope_self(self, client):
+    #     if 'sm' == client.cert_type:
+    #         return
 
-        content = '{"orderId": "SP213142141", "status": "SUCCESS", "uniqueOrderNo": "", "parentMerchantNo": "10085864877", "merchantNo": "10085864877"}'
+    #     content = '{"orderId": "SP213142141", "status": "SUCCESS", "uniqueOrderNo": "", "parentMerchantNo": "10085864877", "merchantNo": "10085864877"}'
 
-        encryptor = RsaEncryptor(
-            clientConfig.get_credentials().get_priKey(),
-            clientConfig.get_yop_public_key().get('default'))
+    #     encryptor = RsaEncryptor(
+    #         clientConfig.get_credentials().get_priKey(),
+    #         clientConfig.get_yop_public_key().get('default'))
 
-        enc = encryptor.envelope_encrypt(content, isv_private_key, isv_public_key)
-        print('enc:{}'.format(enc))
+    #     enc = encryptor.envelope_encrypt(content, isv_private_key, isv_public_key)
+    #     print('enc:{}'.format(enc))
 
-        plain = encryptor.envelope_decrypt(enc, isv_private_key, isv_public_key)
-        print('plain:{}'.format(plain))
+    #     plain = encryptor.envelope_decrypt(enc, isv_private_key, isv_public_key)
+    #     print('plain:{}'.format(plain))
 
-        assert plain == content
+    #     assert plain == content
 
     def test_envelope_notify(self, client):
         if 'sm' == client.cert_type:
@@ -44,7 +44,7 @@ class Test(object):
 
         encryptor = RsaEncryptor(
             isv_private_key,
-            clientConfig.get_yop_public_key().get('RSA2048').values()[0])
+            list(clientConfig.get_yop_public_key().get('RSA2048').values())[0])
 
         plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
         print('plain:{}'.format(plain))
@@ -60,9 +60,12 @@ class Test(object):
 
         encryptor = RsaEncryptor(
             isv_private_key,
-            clientConfig.get_yop_public_key().get('RSA2048').values()[0])
+            list(clientConfig.get_yop_public_key().get(u'RSA2048').values())[0])
 
-        plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
-        print('plain:{}'.format(plain))
+        try:
+            plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
+            print('plain:{}'.format(plain))
 
-        assert plain == content
+            assert plain == content
+        except Exception as e:
+            assert repr(e).find(u'isv private key is illegal!') > 0

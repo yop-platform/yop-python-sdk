@@ -8,7 +8,7 @@ sys.path.append("./")
 
 class Test(object):
     def test_upload(self, client):
-        file_path = '/Users/dreambt/Yeepay/yop-sdk/yop-python-sdk/LICENSE'
+        file_path = './LICENSE'
         # with open(file_path, mode='r', encoding='utf8') as f:
         api = '/yos/v1.0/mer/merchant/qual/upload'
         params = {
@@ -22,7 +22,7 @@ class Test(object):
         if 'sm' == client.cert_type:
             return
 
-        file_path = '/Users/dreambt/Yeepay/yop-sdk/yop-python-sdk//LICENSE'
+        file_path = './LICENSE'
         api = '/yos/v1.0/mer/merchant/qual/upload'
         params = {
             'merQual': ('file_name', open(file_path, mode='rb'), 'multipart/form-data'),
@@ -35,7 +35,7 @@ class Test(object):
         assertion.success(res)
 
     def test_upload_failed(self, client):
-        file_path = '/Users/dreambt/Yeepay/yop-sdk/yop-python-sdk//LICENSE'
+        file_path = './LICENSE'
         api = '/yos/v1.0/mer/merchant/qual/upload2'
         params = {
             'merQual': ('file_name', open(file_path, mode='rb'), 'multipart/form-data'),
