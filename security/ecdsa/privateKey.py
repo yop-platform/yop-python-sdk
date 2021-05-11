@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .utils.integer import RandomInteger
-from .utils.compatibility import *
+from .utils.compatibility import toBytes
 from .utils.binary import BinaryAscii
 from .utils.der import fromPem, removeSequence, removeInteger, removeObject, removeOctetString, removeConstructed, toPem, encodeSequence, encodeInteger, encodeBitString, encodeOid, encodeOctetString, encodeConstructed
 from .publicKey import PublicKey

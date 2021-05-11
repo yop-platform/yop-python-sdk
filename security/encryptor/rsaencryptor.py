@@ -6,14 +6,13 @@ from . import encryptor
 from Crypto import Random
 from Crypto.Hash import SHA256
 from Crypto.Signature import PKCS1_v1_5
-from Crypto.Util.Padding import pad
 import utils.yop_logger as yop_logger
 import utils.yop_security_utils as yop_security_utils
 from builtins import bytes
 from Crypto.Cipher import AES
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
+from security.ecdsa.utils.compatibility import pad, unpad
 
-BLOCK_SIZE = 32  # Bytes
 YOP_RSA_ALGORITHM = 'YOP-RSA2048-SHA256'
 
 # 伪随机数生成器
@@ -77,7 +76,7 @@ class RsaEncryptor(encryptor.Encryptor):
         cipher = AES.new(random_key, AES.MODE_ECB)
         # 对数据进行签名
         sign_to_base64, algorithm, hash_algorithm = self.signature(content, private_key)
-        encrypted_data = cipher.encrypt(pad(content + '$' + sign_to_base64, BLOCK_SIZE))
+        encrypted_data = cipher.encrypt(pad(content + '$' + sign_to_base64))
         encrypted_data = yop_security_utils.encode_base64(encrypted_data)
 
         # 对密钥加密
@@ -85,7 +84,7 @@ class RsaEncryptor(encryptor.Encryptor):
         encrypted_random_key = yop_security_utils.encode_base64(cipher.encrypt(random_key))
         cigher_text = [encrypted_random_key]
         cigher_text.append(encrypted_data)
-        cigher_text.append('AES')
+        cigher_text.append(u'AES')
         cigher_text.append(hash_algorithm)
         return '$'.join(cigher_text)
 
@@ -117,8 +116,7 @@ class RsaEncryptor(encryptor.Encryptor):
         data = cipher.decrypt(encrypted_data)
 
         # 对 pkcs7 格式的数据做特殊处理
-        # data = unpad(data, BLOCK_SIZE)
-        data = data[:-ord(data[-1])]
+        data = unpad(data)
 
         # 分解参数
         data = data.split('$')

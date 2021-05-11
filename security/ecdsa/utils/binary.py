@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .compatibility import *
+from .compatibility import safeHexFromBinary, safeBinaryFromHex, toString
 
 
 class BinaryAscii:
