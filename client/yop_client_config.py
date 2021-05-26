@@ -141,7 +141,7 @@ class YopClientConfig:
 
     def get_credentials(self, appKey=None):
         if appKey is None:
-            return self.sdk_config['credentials'].values()[0]
+            return list(self.sdk_config['credentials'].values())[0]
         else:
             return self.sdk_config['credentials'].get(appKey)
 

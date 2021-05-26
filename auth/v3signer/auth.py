@@ -40,8 +40,7 @@ class SigV3Authenticator:
         self.session_id = session_id
 
     def _format_iso8601_timestamp(self, date_time=datetime.datetime.utcnow().replace(microsecond=0)):
-        return "{0}Z".format(date_time.strftime(_SIGV4_TIMESTAMP_FORMAT),
-                             int(round(date_time.microsecond / 1000)))
+        return "{}Z".format(date_time.strftime(_SIGV4_TIMESTAMP_FORMAT))
 
     def get_query_str(self, items, t1='=', t2='&'):
         lt = []
@@ -103,7 +102,7 @@ class SigV3Authenticator:
         self.logger.debug('signature:\n{}'.format(signature))
 
         authorization_header = algorithm + ' ' + auth_str + '/' + \
-            signed_headers + '/' + signature.decode('utf-8')
+            signed_headers + '/' + signature
 
         self.logger.debug('authorization_header:{}'.format(authorization_header))
 

@@ -1,7 +1,9 @@
 {
-	"python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "test"
+    ],
+    "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
-    "python.pythonPath": "/usr/local/opt/python@3.7/bin/python3"
 }

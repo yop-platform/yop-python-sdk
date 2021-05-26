@@ -2,7 +2,7 @@
 
 import sys
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Some code below reference to crcmod which base on python2 version
 # Replace some functions to compat python3+ version
 #
@@ -12,7 +12,7 @@ if is_py3:
     long = int
     sys.maxint = sys.maxsize
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Export mkCombineFun to user to support crc64 combine feature.
 #
 # Example:
@@ -36,22 +36,22 @@ if is_py3:
 #    combine_fun(crc64_a.crcValue, crc64_b.crcValue, len(string_b))
 #
 
+
 def mkCombineFun(poly, initCrc=~long(0), rev=True, xorOut=0):
     # mask = (1L<<n) - 1
 
     (sizeBits, initCrc, xorOut) = _verifyParams(poly, initCrc, xorOut)
 
-    mask = (long(1)<<sizeBits) - 1
+    mask = (long(1) << sizeBits) - 1
     if rev:
         poly = _bitrev(long(poly) & mask, sizeBits)
     else:
         poly = long(poly) & mask
 
-
     if sizeBits == 64:
         fun = _combine64
     else:
-        raise NotImplemented
+        raise NotImplementedError
 
     def combine_fun(crc1, crc2, len2):
         return fun(poly, initCrc ^ xorOut, rev, xorOut, crc1, crc2, len2)
@@ -59,12 +59,13 @@ def mkCombineFun(poly, initCrc=~long(0), rev=True, xorOut=0):
     return combine_fun
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # The below code implemented crc64 combine logic, the algorithm reference to aliyun-oss-ruby-sdk
 # See more details please visist:
 #   - https://github.com/aliyun/aliyun-oss-ruby-sdk/tree/master/ext/crcx
 
 GF2_DIM = 64
+
 
 def gf2_matrix_square(square, mat):
     for n in xrange(GF2_DIM):
@@ -132,26 +133,28 @@ def _combine64(poly, initCrc, rev, xorOut, crc1, crc2, len2):
 
     return crc1
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # The below code copy from crcmod, see more detail please visist:
 # https://bitbucket.org/cmcqueen1975/crcmod/src/8fb658289c35eff1d37cc47799569f90c5b39e1e/python2/crcmod/crcmod.py?at=default&fileviewer=file-view-default
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Check the polynomial to make sure that it is acceptable and return the number
 # of bits in the CRC.
 
+
 def _verifyPoly(poly):
     msg = 'The degree of the polynomial must be 8, 16, 24, 32 or 64'
-    poly = long(poly) # Use a common representation for all operations
-    for n in (8,16,24,32,64):
-        low = long(1)<<n
+    poly = long(poly)  # Use a common representation for all operations
+    for n in (8, 16, 24, 32, 64):
+        low = long(1) << n
         high = low*2
         if low <= poly < high:
             return n
     raise ValueError(msg)
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Bit reverse the input value.
+
 
 def _bitrev(x, n):
     x = long(x)
@@ -159,19 +162,21 @@ def _bitrev(x, n):
     for i in xrange(n):
         y = (y << 1) | (x & long(1))
         x = x >> 1
-    if ((long(1)<<n)-1) <= sys.maxint:
+    if ((long(1) << n)-1) <= sys.maxint:
         return int(y)
     return y
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # The following function validates the parameters of the CRC, namely,
 # poly, and initial/final XOR values.
 # It returns the size of the CRC (in bits), and "sanitized" initial/final XOR values.
 
+
 def _verifyParams(poly, initCrc, xorOut):
     sizeBits = _verifyPoly(poly)
 
-    mask = (long(1)<<sizeBits) - 1
+    mask = (long(1) << sizeBits) - 1
 
     # Adjust the initial CRC to the correct data type (unsigned value).
     initCrc = long(initCrc) & mask
