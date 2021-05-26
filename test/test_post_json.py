@@ -38,7 +38,24 @@ class Test(object):
         params = {
             'parentMerchantNo': '10000470992',
             'merchantNo': '10000470992',
-            'orderId': ['苹果', '香蕉', '草莓']
+            'orderId': [
+                '苹果',
+                '香蕉',
+                '草莓']
+        }
+        res = client.post_json(api, params)
+        assertion.failure(res, '40042')
+
+    def test_post_json_failed(self, client):
+        api = '/rest/v1.0/std/eaccount/topupquery'
+        params = {
+            'parentMerchantNo': '10000470992',
+            'merchantNo': '10000470992',
+            'orderId': [
+                '苹果',
+                '香蕉',
+                '草莓'],
+            'productInfo': '[{\"productCode\":\"MERCHANT_SCAN_ALIPAY_OFFLINE\",\"rateType\":\"SINGLE_PERCENT\",\"percentRate\":\"0.1\"},{\"productCode\":\"MERCHANT_SCAN_UNIONPAY_CREDIT\",\"rateType\":\"SINGLE_FIXED\",\"fixedRate\":\"1\"}]'
         }
         res = client.post_json(api, params)
         assertion.failure(res, '40042')
