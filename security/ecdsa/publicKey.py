@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .utils.compatibility import *
+from .utils.compatibility import toBytes
 from .utils.der import fromPem, removeSequence, removeObject, removeBitString, toPem, encodeSequence, encodeOid, encodeBitString
 from .utils.binary import BinaryAscii
 from .point import Point

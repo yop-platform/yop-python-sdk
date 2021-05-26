@@ -55,7 +55,7 @@ def encode_base64(data):
     for i in range(3):
         if data.endswith('='.encode('latin-1')):
             data = data[:-1]
-    return data
+    return data.decode()
 
 
 def cal_file_crc64(file, block_size=64 * 1024, init_crc=0):
