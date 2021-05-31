@@ -3,7 +3,7 @@
 from sys import version_info as pyVersion
 from binascii import hexlify, unhexlify
 
-BLOCK_SIZE = 32  # Bytes
+BLOCK_SIZE = 32  # Bytes, AES256
 
 
 def pad(data_to_pad, block_size=BLOCK_SIZE):
