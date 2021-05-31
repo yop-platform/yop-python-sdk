@@ -76,7 +76,7 @@ class RsaEncryptor(encryptor.Encryptor):
         cipher = AES.new(random_key, AES.MODE_ECB)
         # 对数据进行签名
         sign_to_base64, algorithm, hash_algorithm = self.signature(content, private_key)
-        encrypted_data = cipher.encrypt(pad(content + '$' + sign_to_base64))
+        encrypted_data = cipher.encrypt(pad(content + '$' + sign_to_base64, 16))
         encrypted_data = yop_security_utils.encode_base64(encrypted_data)
 
         # 对密钥加密
@@ -116,7 +116,7 @@ class RsaEncryptor(encryptor.Encryptor):
         data = cipher.decrypt(encrypted_data)
 
         # 对 pkcs7 格式的数据做特殊处理
-        data = unpad(data)
+        data = unpad(data, len(random_key))
 
         # 分解参数
         data = data.split('$')

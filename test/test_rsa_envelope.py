@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from sys import version_info as pyVersion
 import utils.yop_security_utils as yop_security_utils
 from client.yop_client_config import YopClientConfig
 from security.encryptor.rsaencryptor import RsaEncryptor
@@ -17,31 +18,51 @@ isv_public_key = yop_security_utils.parse_rsa_pub_key(
 
 
 class Test(object):
-    # def test_envelope_self(self, client):
-    #     if 'sm' == client.cert_type:
-    #         return
+    def test_envelope_self(self, client):
+        if 'sm' == client.cert_type or pyVersion.major == 2:
+            # TODO python2 下面ECB pad有问题
+            return
 
-    #     content = '{"orderId": "SP213142141", "status": "SUCCESS", "uniqueOrderNo": "", "parentMerchantNo": "10085864877", "merchantNo": "10085864877"}'
+        content = '{"orderId": "SP213142141", "status": "SUCCESS", "uniqueOrderNo": "", "parentMerchantNo": "10085864877", "merchantNo": "10085864877"}'
 
-    #     encryptor = RsaEncryptor(
-    #         clientConfig.get_credentials().get_priKey(),
-    #         clientConfig.get_yop_public_key().get('default'))
+        encryptor = RsaEncryptor(
+            clientConfig.get_credentials().get_priKey(),
+            clientConfig.get_yop_public_key().get('default'))
 
-    #     enc = encryptor.envelope_encrypt(content, isv_private_key, isv_public_key)
-    #     print('enc:{}'.format(enc))
+        enc = encryptor.envelope_encrypt(content, isv_private_key, isv_public_key)
+        print('enc:{}'.format(enc))
 
-    #     plain = encryptor.envelope_decrypt(enc, isv_private_key, isv_public_key)
-    #     print('plain:{}'.format(plain))
+        plain = encryptor.envelope_decrypt(enc, isv_private_key, isv_public_key)
+        print('plain:{}'.format(plain))
 
-    #     assert plain == content
+        assert plain == content
 
-    def test_envelope_notify(self, client):
+    def test_envelope_notify_16(self, client):
         if 'sm' == client.cert_type:
             return
 
+        # 16/32 pad 一致的情况
         content = '{"date":"20181014000000","aaa":"","boolean":true,"SIZE":-14,"name":"易宝支付","dou":12.134}'
         response = 'EJSkBOwrHduycpFOvg9rJAoC_HE4_ZBLCiZJuvJGm2fgqr7TU9L56qjNkU3bWdZRwtQBMulMq6JokW4ZNglNIAYBysJrHHXF68BP1ohuFC5kfJXzvya4UXBdHFHgtT7vJUsvxUCOANwR36NOhK1kzmGiuLDiaXGtXquo5p-H9JDSIXY7ZcDf6P0WdZ8BG2_TR34sbTGDW73m-4vnw3lCPWGhxlgnW_6CxRVWpl-iXIfMBl52DcPCa9i1-HhLb1-_g8Rf6-Trm4ahMi-dNJok71XK-gNIYbJRNhdMfFfT2cC_tXjK76zfEu94LkHbFJZkflmlH6iVy6y3aPpJL49_cg$FBa72nweVtKsfXawN9BTR6AOEeSxWygcUyP_WKGvqKvVF6vOeAY7P4NYTTgojtnL9H4Pr6zmKbXgJI0GKHRjfSHoLTDf5z2qxIfD1Cd8f443PUpL7PCpPEduNSTuIx2Je5uhCtJ6Sdglp5pw8kRDNx2E2Mz0fgbBaCuatLtJmr62aiUQAlfDVoXbdcFv-5lES00KAP9S1nU8phBnQhJt2V76x-alH_rq13Pf3F_Xo6wZDAFhzrmlWVlh3jmbMDGwsBSWf1j0iIZpbsS3Vd4-UO6RO_52Hb1ZsMhZl3fMzzBIx1-Qc7w2pWlsVrYbymWGlNZukeir0RMT9I72VUqGVoMh9U5Qnw7DZssvwyjLPLjmx54vDHTxE3EXV70heccs0p5wI7gomeO8u-Szpx4CiBkeMUTtaXdtDmqrxnVnx6C4wVFSeXMSHn9RF35GrRZlOSSWVNKh1AMC57m0cJXk0NfTvl9eDkx5TmHBIrbrZ3Xfi_ZHILUjwc4A87KOeSwJW-C3OWnAN1QsDCgxZsaPdGh8O0y3Y6Wr1sEWUMV5nwH4eS_a2G6rZUswN3LJ6iro2lhLrcteIYK4QYzh8nRu5g$AES$SHA256'
 
+        encryptor = RsaEncryptor(
+            isv_private_key,
+            list(clientConfig.get_yop_public_key().get('RSA2048').values())[0])
+
+        plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
+        print('plain:{}'.format(plain))
+
+        assert plain == content
+
+    def test_envelope_notify_32(self, client):
+        if 'sm' == client.cert_type:
+            return
+
+        # 16/32 pad 不一致的情况
+        content = '{"date":"20181014000000","aaa":"","boolean":true,"SIZE":-14,"name":"易宝支付","dou":12.34}'
+        response = 'AT320grqREB__reG5un3QbzBWQ0QfHzdHkHJW4_GmMzY4Qeg-ud_xLhCucVVxLGZQlKiJoH6BS26fVz47r49S6o_6OTUPMoxCdy-mqhPx0mF3LAvmQNV8v_bKingnMM--LiW6z8OE9i_e8-sJ2YrlmhI99AAVqpC-9Kdn_Mx1x0-i6ojv7TO0foUN3RjPomvX_43Vc2xJdJIWmYx18Z5aOrlz1Z8MiEXntx-W7cBI9veC9k3tb_Jkoc1QyyhyAU6za4sCjQq5InvhUUljN62dgHbEIiS8Jp3YOOy3bf0xy9eotKsybpGr63ZPpukdAYUGJVPfAqOXxMdokbxLGvSag$6DjZHtBf9YTJcPeQ6HmNEGSMuRMVRn1idDS18MweFPUrkCd-iBq06b6HDh0oG4ZSqW2ef_64MSOMKCnNWtFreuXpvVtlYikCZV7Tr_vYagaJ8tq3TGMlpZPuUGKmKSGpXS4V5zrzN9OTWUEQejqVoxQhPriKERXsl34ceS9Em_AHqPgWzeV5Cgfsn2it6SnOGMVTRNMB-G61m7J7rVjDlGLatMzGOPpjraj2iwTmkwFD7PQOhlHg4rPr17vdsJQOBvhAtGCrTp5pqLABRDOQefQCQ3P2z_BPg_GC3F44Osd_EzZ-PIXAha3ULFWM6g6iY8g88h0aCEZBrt0qmfjzDnl6seyuaeah6wC1hCVYmC6tWUfbW_2QIfkRMtxwGsfF7QXo2IplfkYbEdfIZoNejpBCA72RLKU6ApNiBSKQGvV4MT8IhbHlyMNjm4zCiAc5hvqy15z2pMM1CaKpKtU8jxq03H0sZvzr749dCPh5-O0BgoZST_D3eOlu7usjlKstxmIcBUYymbv0XgsNOEbzqzpQgc1-IkMdG_k17H33JXmi9Kxp1ezRjER9sqoG_oZEzjL7KP_PIFvUtAeJ5e4pdA$AES$SHA256'
+
+        clientConfig = YopClientConfig(config_file='config/yop_sdk_config_rsa_prod.json')
         encryptor = RsaEncryptor(
             isv_private_key,
             list(clientConfig.get_yop_public_key().get('RSA2048').values())[0])
