@@ -1,12 +1,8 @@
-certifi==2020.12.5
-chardet==4.0.0
 crcmod==1.7
 future==0.18.2
-idna==2.10
-pycryptodome==3.10.1
+pycrypto==2.6.1
+pycryptodomex==3.10.1
 pyOpenSSL==20.0.1
-python-dateutil==2.8.1
-requests==2.25.1
+pytest==4.6.11
 requests-toolbelt==0.9.1
 simplejson==3.17.2
-urllib3==1.26.5

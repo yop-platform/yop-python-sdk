@@ -58,4 +58,4 @@ class Test(object):
             'productInfo': '[{\"productCode\":\"MERCHANT_SCAN_ALIPAY_OFFLINE\",\"rateType\":\"SINGLE_PERCENT\",\"percentRate\":\"0.1\"},{\"productCode\":\"MERCHANT_SCAN_UNIONPAY_CREDIT\",\"rateType\":\"SINGLE_FIXED\",\"fixedRate\":\"1\"}]'
         }
         res = client.post_json(api, params)
-        assertion.failure(res, '40042')
+        assertion.failure(res, '40020')

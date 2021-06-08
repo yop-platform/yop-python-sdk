@@ -3,7 +3,6 @@
 from security.ecdsa.publicKey import PublicKey
 from security.ecdsa.privateKey import PrivateKey
 import OpenSSL
-from dateutil import parser
 from auth.v3signer.credentials import YopCredentials
 import simplejson
 import utils.yop_logger as yop_logger
@@ -99,10 +98,8 @@ class YopClientConfig:
         serial_no = cert.get_serial_number()
         # signature = cert.get_signature_algorithm().decode("UTF-8")
         comname = certIssue.commonName
-        datetime_struct = parser.parse(cert.get_notBefore().decode("UTF-8"))
-        starttime = datetime_struct.strftime('%Y-%m-%d %H:%M:%S')
-        datetime_struct = parser.parse(cert.get_notAfter().decode("UTF-8"))
-        endtime = datetime_struct.strftime('%Y-%m-%d %H:%M:%S')
+        starttime = cert.get_notBefore()
+        endtime = cert.get_notAfter()
         flag = cert.has_expired()
         # long = cert.get_pubkey().bits()
         public = OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, cert.get_pubkey()).decode("utf-8")

@@ -16,7 +16,7 @@ class Test(object):
                 assertion.failure(res, '40029')
             else:
                 assertion.success(res)
-                assert '99999' == res['result']['code']
+                assert '00000' == res['result']['code']
         else:
             assert '40042' == res['code']
 
@@ -31,7 +31,7 @@ class Test(object):
         res = client.get(api, params, credentials)
         if 'prod' == client.env:
             assertion.success(res)
-            assert '99999' == res['result']['code']
+            assert '00000' == res['result']['code']
         else:
             assert '40042' == res['code']
 

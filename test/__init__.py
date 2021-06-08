@@ -4,7 +4,7 @@ import pytest
 
 if __name__ == '__main__':
     pytest.main(["-s", "test/"])
-    # pytest.main(["-s", "test/", "--env", "qa"]) // upload & download
+    # pytest.main(["-s", "test/", "--env", "qa"])  # upload & download
     # pytest.main(["-s", "test/", "--cert-type", "sm"])
     # pytest.main(["-s", "test/", "--env", "qa", "--cert-type", "sm"])
 
