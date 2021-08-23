@@ -1,7 +1,7 @@
 name: Ponicode unit test generation
 on:
     push:
-        branches: [master]
+        branches: [develop]
 jobs:
     build:
         runs-on: ubuntu-latest
