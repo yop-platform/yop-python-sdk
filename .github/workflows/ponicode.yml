@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Ponicode DogString: Automatic AI-based Docstring generation
+    - name: Ponicode DogString
       uses: ponicode/dogstring-action@v0.1.2-beta
 
     - name: Ponicode Unit Test
