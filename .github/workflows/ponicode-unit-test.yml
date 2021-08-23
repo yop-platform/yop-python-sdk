@@ -1,0 +1,29 @@
+name: Ponicode unit test generation
+on:
+    push:
+        branches: [master]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            # checkout your code with your git history (mandatory to changedFilesOnly option)
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+
+            # Unit tests your functions with Ponicode action
+            - uses: ponicode/unit-testing-action@master
+              id: ponicode
+              with:
+                  repoPath: ./
+                  authToken: ${{ secrets.PONICODE_TOKEN }}
+
+              # Creates pull request with all changes in file
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@v2
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  commit-message: "[ponicode-pull-request] Ponicode found unit tests to write!"
+                  branch: ponicode-tests
+                  title: "[Ponicode] Unit tests created"
+                  body: ${{ steps.ponicode.outputs.ponicodeSummary }}
