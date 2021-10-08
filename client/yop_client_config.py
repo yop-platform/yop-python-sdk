@@ -11,11 +11,25 @@ from Crypto.PublicKey import RSA
 
 class YopClientConfig:
     def __init__(self, config_file='config/yop_sdk_config_rsa_prod.json'):
+        """
+        Initializes the SDK.
+
+        Args:
+            self: write your description
+            config_file: write your description
+        """
         self.logger = yop_logger.get_logger()
         self.config_file = config_file
         self.sdk_config = self._init_config(config_file)
 
     def _init_config(self, config_file):
+        """
+         config_file
+
+        Args:
+            self: write your description
+            config_file: write your description
+        """
         # 获取配置文件信息
         with open(config_file, 'r') as f:
             sdk_config = simplejson.load(f)
@@ -44,6 +58,14 @@ class YopClientConfig:
         return sdk_config
 
     def _parse_isv_private_key(self, appKey, config):
+        """
+        Parse the isv private key and return YopCredentials object.
+
+        Args:
+            self: write your description
+            appKey: write your description
+            config: write your description
+        """
         store_type = config.get('store_type', 'string')
         cert_type = config.get('cert_type', 'RSA2048')
         appKey = config.get('app_key', appKey)
@@ -61,6 +83,13 @@ class YopClientConfig:
             return None
 
     def _parse_yop_public_key(self, config):
+        """
+        Parse the yop public key from a config file.
+
+        Args:
+            self: write your description
+            config: write your description
+        """
         store_type = config.get('store_type', 'string')
         cert_type = config.get('cert_type', 'RSA2048')
         serial_no = config.get('serial_no', 'unknown')
@@ -93,7 +122,6 @@ class YopClientConfig:
         file_context = open(ceradd).read()
         cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, file_context)
 
-        certIssue = cert.get_issuer()
         version = cert.get_version() + 1
         serial_no = cert.get_serial_number()
         # signature = cert.get_signature_algorithm().decode("UTF-8")
@@ -107,8 +135,7 @@ class YopClientConfig:
         # components = certIssue.get_components()
 
         self.logger.info(
-            "certIssue:{}\ncomname:{}\nversion:{}\nserial_no:{}\nstarttime:{}\nendtime:{}\nexpired:{}\n{}".format(
-                certIssue,
+            "comname:{}\nversion:{}\nserial_no:{}\nstarttime:{}\nendtime:{}\nexpired:{}\n{}".format(
                 comname,
                 version,
                 serial_no,
@@ -137,10 +164,23 @@ class YopClientConfig:
         return self.sdk_config['sandbox_server_root']
 
     def get_credentials(self, appKey=None):
+        """
+        Get credentials for SDK.
+
+        Args:
+            self: write your description
+            appKey: write your description
+        """
         if appKey is None:
             return list(self.sdk_config['credentials'].values())[0]
         else:
             return self.sdk_config['credentials'].get(appKey)
 
     def get_yop_public_key(self):
+        """
+        Get Yoop public key
+
+        Args:
+            self: write your description
+        """
         return self.sdk_config['yop_public_key']

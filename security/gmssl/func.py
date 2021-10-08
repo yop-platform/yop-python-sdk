@@ -17,6 +17,12 @@ unpadding = lambda data: data[:-data[-1]]
 
 
 def bytes_to_int(bytes):
+    """
+    Convert bytes to a signed integer.
+
+    Args:
+        bytes: write your description
+    """
     result = 0
     for b in bytes:
         result = result * 256 + ord(b)
@@ -24,6 +30,13 @@ def bytes_to_int(bytes):
 
 
 def int_to_bytes(value, length):
+    """
+    Convert a value to a list of bytes.
+
+    Args:
+        value: write your description
+        length: write your description
+    """
     result = []
     for i in range(0, length):
         result.append(value >> (i * 8) & 0xff)

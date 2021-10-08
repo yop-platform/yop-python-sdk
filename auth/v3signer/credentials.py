@@ -8,6 +8,15 @@ from Crypto.PublicKey import RSA
 
 class YopCredentials:
     def __init__(self, appKey=None, priKey=None, cert_type='SM2'):
+        """
+        PKCS12 PKCS12 PKCS12 PKCS12 PKCS
+
+        Args:
+            self: write your description
+            appKey: write your description
+            priKey: write your description
+            cert_type: write your description
+        """
         self.appKey = appKey
         self.cert_type = cert_type
 
@@ -27,10 +36,28 @@ class YopCredentials:
             self.encryptor = RsaEncryptor(private_key=self.priKey)
 
     def get_appKey(self):
+        """
+        Return the appKey for this device.
+
+        Args:
+            self: write your description
+        """
         return self.appKey
 
     def get_priKey(self):
+        """
+        Return the priKey as a string
+
+        Args:
+            self: write your description
+        """
         return self.priKey
 
     def get_cert_type(self):
+        """
+        Return the certificate type.
+
+        Args:
+            self: write your description
+        """
         return self.cert_type

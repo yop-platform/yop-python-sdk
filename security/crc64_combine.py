@@ -38,6 +38,16 @@ if is_py3:
 
 
 def mkCombineFun(poly, initCrc=~long(0), rev=True, xorOut=0):
+    """
+    Create a function that can be used to combine a polynomial.
+
+    Args:
+        poly: write your description
+        initCrc: write your description
+        long: write your description
+        rev: write your description
+        xorOut: write your description
+    """
     # mask = (1L<<n) - 1
 
     (sizeBits, initCrc, xorOut) = _verifyParams(poly, initCrc, xorOut)
@@ -54,6 +64,14 @@ def mkCombineFun(poly, initCrc=~long(0), rev=True, xorOut=0):
         raise NotImplementedError
 
     def combine_fun(crc1, crc2, len2):
+        """
+        Combine the CRC functions.
+
+        Args:
+            crc1: write your description
+            crc2: write your description
+            len2: write your description
+        """
         return fun(poly, initCrc ^ xorOut, rev, xorOut, crc1, crc2, len2)
 
     return combine_fun
@@ -68,11 +86,25 @@ GF2_DIM = 64
 
 
 def gf2_matrix_square(square, mat):
+    """
+    Multiply a matrix by a GF2 matrix.
+
+    Args:
+        square: write your description
+        mat: write your description
+    """
     for n in xrange(GF2_DIM):
         square[n] = gf2_matrix_times(mat, mat[n])
 
 
 def gf2_matrix_times(mat, vec):
+    """
+    Compute the sum of the times of the elements of a GF2 matrix.
+
+    Args:
+        mat: write your description
+        vec: write your description
+    """
     summary = 0
     mat_index = 0
 
@@ -87,6 +119,18 @@ def gf2_matrix_times(mat, vec):
 
 
 def _combine64(poly, initCrc, rev, xorOut, crc1, crc2, len2):
+    """
+    Combine a polynomial with GF2 using GF2 algorithm.
+
+    Args:
+        poly: write your description
+        initCrc: write your description
+        rev: write your description
+        xorOut: write your description
+        crc1: write your description
+        crc2: write your description
+        len2: write your description
+    """
     if len2 == 0:
         return crc1
 
@@ -143,6 +187,12 @@ def _combine64(poly, initCrc, rev, xorOut, crc1, crc2, len2):
 
 
 def _verifyPoly(poly):
+    """
+    Verify that the polynomial is valid.
+
+    Args:
+        poly: write your description
+    """
     msg = 'The degree of the polynomial must be 8, 16, 24, 32 or 64'
     poly = long(poly)  # Use a common representation for all operations
     for n in (8, 16, 24, 32, 64):
@@ -157,6 +207,13 @@ def _verifyPoly(poly):
 
 
 def _bitrev(x, n):
+    """
+    Reverse a bitstring.
+
+    Args:
+        x: write your description
+        n: write your description
+    """
     x = long(x)
     y = long(0)
     for i in xrange(n):
@@ -174,6 +231,14 @@ def _bitrev(x, n):
 
 
 def _verifyParams(poly, initCrc, xorOut):
+    """
+    Verifies the parameters of a polynomial.
+
+    Args:
+        poly: write your description
+        initCrc: write your description
+        xorOut: write your description
+    """
     sizeBits = _verifyPoly(poly)
 
     mask = (long(1) << sizeBits) - 1

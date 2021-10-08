@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
 def success(res):
+    """
+    Test for success.
+
+    Args:
+        res: write your description
+    """
     if res.__contains__('code'):
         code = res['code']
         assert '40020' != code
@@ -14,6 +20,14 @@ def success(res):
 
 
 def failure(res, exceptCode, key='code'):
+    """
+    Check that the response contains a key with the given exception code.
+
+    Args:
+        res: write your description
+        exceptCode: write your description
+        key: write your description
+    """
     if res.__contains__(key):
         code = res[key]
         assert exceptCode == code

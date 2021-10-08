@@ -23,6 +23,13 @@ class Test(object):
     #     assert result
 
     def test_sign_yop(self, client):
+        """
+        Verify the signature of the text.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         # QA
         if 'qa' == client.env:
             sign_2 = "pEUtFQeSbFaZs1qd8h4AopxwDMOOEUpX4k58zwQQHNcTznTs0U-GLaxsh9OPFCcn_gDgf2jMiC2Fa_5a5B2Fhw"

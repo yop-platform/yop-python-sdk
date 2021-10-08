@@ -6,6 +6,13 @@ from auth.v3signer.credentials import YopCredentials
 
 class Test(object):
     def test_get(self, client):
+        """
+        Run the get test.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/cnppay/bank-limit/query'
         params = {
             'merchantNo': '10000470992'
@@ -21,6 +28,13 @@ class Test(object):
             assert '40042' == res['code']
 
     def test_get_with_rsa_credentials(self, client):
+        """
+        Specific test for getting data with RSA credentials.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/cnppay/bank-limit/query'
         params = {
             'merchantNo': '10000470992'
@@ -36,6 +50,13 @@ class Test(object):
             assert '40042' == res['code']
 
     def test_get_failed(self, client):
+        """
+        Test that getting a resource fails on an untrusted endpoint
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/bank/xxx'
         params = {
             'name': '张三',

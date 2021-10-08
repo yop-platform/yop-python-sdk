@@ -10,10 +10,25 @@ from .curve import curvesByOid, supportedCurves, sm2p256v1
 class PublicKey:
 
     def __init__(self, point, curve):
+        """
+        Initialize the point and curve.
+
+        Args:
+            self: write your description
+            point: write your description
+            curve: write your description
+        """
         self.point = point
         self.curve = curve
 
     def toString(self, encoded=False):
+        """
+        Return a string representation of the curve.
+
+        Args:
+            self: write your description
+            encoded: write your description
+        """
         xString = BinaryAscii.stringFromNumber(
             number=self.point.x,
             length=self.curve.length(),
@@ -25,9 +40,21 @@ class PublicKey:
         return "\x00\x04" + xString + yString if encoded else xString + yString
 
     def toStr(self):
+        """
+        Returns a string representation of the point.
+
+        Args:
+            self: write your description
+        """
         return str(hex(self.point.x))[2:-1] + str(hex(self.point.y))[2:-1]
 
     def toDer(self):
+        """
+        Return a DER - encoded representation of this EllipticCurve.
+
+        Args:
+            self: write your description
+        """
         oidEcPublicKey = (1, 2, 840, 10045, 2, 1)
         encodeEcAndOid = encodeSequence(
             encodeOid(*oidEcPublicKey),
@@ -37,14 +64,34 @@ class PublicKey:
         return encodeSequence(encodeEcAndOid, encodeBitString(self.toString(encoded=True)))
 
     def toPem(self):
+        """
+        Return this Signer as a DER - encoded PEM.
+
+        Args:
+            self: write your description
+        """
         return toPem(der=toBytes(self.toDer()), name="PUBLIC KEY")
 
     @classmethod
     def fromPem(cls, string):
+        """
+        Create a PrivateKey from a PEM encoded string.
+
+        Args:
+            cls: write your description
+            string: write your description
+        """
         return cls.fromDer(fromPem(string))
 
     @classmethod
     def fromDer(cls, string):
+        """
+        Create a curve from a DER encoded string.
+
+        Args:
+            cls: write your description
+            string: write your description
+        """
         s1, empty = removeSequence(string)
         if len(empty) != 0:
             raise Exception("trailing junk after DER public key: {}".format(
@@ -82,6 +129,16 @@ class PublicKey:
 
     @classmethod
     def fromString(cls, string, curve=sm2p256v1, validatePoint=True):
+        """
+        Create a PublicKey instance from a string.
+
+        Args:
+            cls: write your description
+            string: write your description
+            curve: write your description
+            sm2p256v1: write your description
+            validatePoint: write your description
+        """
         baseLen = curve.length()
 
         xs = string[:baseLen]

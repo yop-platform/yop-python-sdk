@@ -25,6 +25,15 @@ T_j = [
 
 
 def sm3_ff_j(x, y, z, j):
+    """
+    Defined in 802. 3. 3.
+
+    Args:
+        x: write your description
+        y: write your description
+        z: write your description
+        j: write your description
+    """
     if 0 <= j and j < 16:
         ret = x ^ y ^ z
     elif 16 <= j and j < 64:
@@ -33,6 +42,15 @@ def sm3_ff_j(x, y, z, j):
 
 
 def sm3_gg_j(x, y, z, j):
+    """
+    Calculate the jth order Gruneisen parameter for the general general GLG function.
+
+    Args:
+        x: write your description
+        y: write your description
+        z: write your description
+        j: write your description
+    """
     if 0 <= j and j < 16:
         ret = x ^ y ^ z
     elif 16 <= j and j < 64:
@@ -42,14 +60,33 @@ def sm3_gg_j(x, y, z, j):
 
 
 def sm3_p_0(x):
+    """
+    Pseudo - random power of 3.
+
+    Args:
+        x: write your description
+    """
     return x ^ (rotl(x, 9 % 32)) ^ (rotl(x, 17 % 32))
 
 
 def sm3_p_1(x):
+    """
+    Pseudo - random number generator.
+
+    Args:
+        x: write your description
+    """
     return x ^ (rotl(x, 15 % 32)) ^ (rotl(x, 23 % 32))
 
 
 def sm3_cf(v_i, b_i):
+    """
+    Calculate the CRC - 32 Madhava - Gregory - Leibniz series.
+
+    Args:
+        v_i: write your description
+        b_i: write your description
+    """
     w = []
     for i in range(16):
         weight = 0x1000000
@@ -97,6 +134,12 @@ def sm3_cf(v_i, b_i):
 
 
 def sm3_hash(msg):
+    """
+    Calculate the SM3 hash of a message.
+
+    Args:
+        msg: write your description
+    """
     # print(msg)
     len1 = len(msg)
     reserve1 = len1 % 64
@@ -137,6 +180,13 @@ def sm3_hash(msg):
 
 
 def sm3_kdf(z, klen):  # z为16进制表示的比特串（str），klen为密钥长度（单位byte）
+    """
+    Defined in equation 3. 3. 3. 2 - 1 page 151.
+
+    Args:
+        z: write your description
+        klen: write your description
+    """
     klen = int(klen)
     ct = 0x00000001
     rcnt = ceil(klen / 32)

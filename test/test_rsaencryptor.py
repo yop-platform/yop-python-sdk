@@ -27,6 +27,13 @@ class Test(object):
     #     assert result
 
     def test_sign_yop(self, client):
+        """
+        Verify the sign of the yop certificate
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type or 'qa' == client.env:
             return
 

@@ -20,6 +20,12 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope='session')
 def client(request):
+    """
+    Return a YopClient object.
+
+    Args:
+        request: write your description
+    """
     env = request.config.getoption("--env")
     cert_type = request.config.getoption("--cert-type")
     if env == "local":
@@ -32,7 +38,6 @@ def client(request):
         print('初始化生产环境的 Yop Client')
         config_file = 'config/yop_sdk_config_{}_{}.json'.format(cert_type, env)
 
-    print('config_file:{}'.format(config_file))
     clientConfig = YopClientConfig(config_file)
     client = YopClient(clientConfig, cert_type, env)
     return client

@@ -6,6 +6,13 @@ from auth.v3signer.credentials import YopCredentials
 
 class Test(object):
     def test_post_json(self, client):
+        """
+        Test POST JSON response.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/std/eaccount/topupquery'
         params = {
             'parentMerchantNo': '10000470992',
@@ -17,6 +24,13 @@ class Test(object):
             assertion.success(res)
 
     def test_post_json_with_credentials(self, client):
+        """
+        Test for POST json with credentials.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -34,6 +48,13 @@ class Test(object):
             assertion.success(res)
 
     def test_post_json_failed(self, client):
+        """
+        Test that POST request succeeds when JSON is not successful.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/std/eaccount/topupquery1'
         params = {
             'parentMerchantNo': '10000470992',
@@ -47,6 +68,13 @@ class Test(object):
         assertion.failure(res, '40042')
 
     def test_post_json_failed(self, client):
+        """
+        Test that POST request with json fails.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/std/eaccount/topupquery'
         params = {
             'parentMerchantNo': '10000470992',
