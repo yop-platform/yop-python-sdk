@@ -34,6 +34,15 @@ class YopClient:
     clientConfig = None
 
     def __init__(self, clientConfig=None, cert_type=None, env=None):
+        """
+        Yop的      
+
+        Args:
+            self: write your description
+            clientConfig: write your description
+            cert_type: write your description
+            env: write your description
+        """
         self.logger = yop_logger.get_logger()
         self.env = env
         self.cert_type = cert_type
@@ -50,12 +59,30 @@ class YopClient:
         self.authProvider = SigV3AuthProvider(self.yop_encryptor_dict)
 
     def get_encryptor(self, cert_type, yop_public_key_dict):
+        """
+        Returns the appropriate encryptor depending on the cert_type.
+
+        Args:
+            self: write your description
+            cert_type: write your description
+            yop_public_key_dict: write your description
+        """
         if 'SM2' == cert_type:
             return SmEncryptor(public_key_dict=yop_public_key_dict)
         else:
             return RsaEncryptor(public_key=list(yop_public_key_dict.values())[0])
 
     def get(self, api, query_params={}, credentials=None, basePath=None):
+        """
+        Make a GET request to the API.
+
+        Args:
+            self: write your description
+            api: write your description
+            query_params: write your description
+            credentials: write your description
+            basePath: write your description
+        """
         if credentials is None:
             credentials = self.clientConfig.get_credentials()
 
@@ -88,6 +115,17 @@ class YopClient:
             raise e
 
     def download(self, api, query_params={}, credentials=None, basePath=None, file_path=None):
+        """
+        Downloads the specified API from the server.
+
+        Args:
+            self: write your description
+            api: write your description
+            query_params: write your description
+            credentials: write your description
+            basePath: write your description
+            file_path: write your description
+        """
         if credentials is None:
             credentials = self.clientConfig.get_credentials()
 
@@ -139,6 +177,15 @@ class YopClient:
     def _get_request(self,
                      url, query_params={},
                      headers={}):
+        """
+        Wrapper for requests. get that handles the headers and returns the response.
+
+        Args:
+            self: write your description
+            url: write your description
+            query_params: write your description
+            headers: write your description
+        """
         res = requests.get(url=url, params=query_params, headers=headers)
         return res
 
@@ -148,9 +195,30 @@ class YopClient:
             post_params={},
             credentials=None,
             basePath=None):
+        """
+        POST the specified post params to the specified API
+
+        Args:
+            self: write your description
+            api: write your description
+            post_params: write your description
+            credentials: write your description
+            basePath: write your description
+        """
         return self.post(api, post_params, credentials, basePath=basePath, json_param=True)
 
     def post(self, api, post_params={}, credentials=None, basePath=None, json_param=False):
+        """
+        Make a POST request to the API.
+
+        Args:
+            self: write your description
+            api: write your description
+            post_params: write your description
+            credentials: write your description
+            basePath: write your description
+            json_param: write your description
+        """
         if credentials is None:
             credentials = self.clientConfig.get_credentials()
 
@@ -189,6 +257,16 @@ class YopClient:
             raise e
 
     def upload(self, api, post_params={}, credentials=None, basePath=None):
+        """
+        Upload a new file to Yos.
+
+        Args:
+            self: write your description
+            api: write your description
+            post_params: write your description
+            credentials: write your description
+            basePath: write your description
+        """
         if credentials is None:
             credentials = self.clientConfig.get_credentials()
 
@@ -221,6 +299,16 @@ class YopClient:
             raise e
 
     def _post_request(self, url, payload=None, params=None, headers={}):
+        """
+        Perform a POST request.
+
+        Args:
+            self: write your description
+            url: write your description
+            payload: write your description
+            params: write your description
+            headers: write your description
+        """
         res = requests.post(url=url, headers=headers, data=payload, params=params)
         self.logger.debug(
             'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'.format(

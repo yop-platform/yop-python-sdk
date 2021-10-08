@@ -26,11 +26,23 @@ bytesHexF = toBytes(hexF)
 
 
 def encodeSequence(*encodedPieces):
+    """
+    Encodes a sequence of bytes into a hex string.
+
+    Args:
+        encodedPieces: write your description
+    """
     totalLengthLen = sum([len(p) for p in encodedPieces])
     return hex0 + _encodeLength(totalLengthLen) + "".join(encodedPieces)
 
 
 def encodeInteger(x):
+    """
+    Encodes an integer as a hex string.
+
+    Args:
+        x: write your description
+    """
     assert x >= 0
     t = ("%x" % x).encode()
 
@@ -46,6 +58,14 @@ def encodeInteger(x):
 
 
 def encodeOid(first, second, *pieces):
+    """
+    Encodes an oid.
+
+    Args:
+        first: write your description
+        second: write your description
+        pieces: write your description
+    """
     assert first <= 2
     assert second <= 39
 
@@ -56,18 +76,43 @@ def encodeOid(first, second, *pieces):
 
 
 def encodeBitString(t):
+    """
+    Encode a bit string as a hex string
+
+    Args:
+        t: write your description
+    """
     return hexC + _encodeLength(len(t)) + t
 
 
 def encodeOctetString(t):
+    """
+    Encode a string as a sequence of bytes.
+
+    Args:
+        t: write your description
+    """
     return hexD + _encodeLength(len(t)) + t
 
 
 def encodeConstructed(tag, value):
+    """
+    Encode a tag and value as a string.
+
+    Args:
+        tag: write your description
+        value: write your description
+    """
     return chr(hex129 + tag) + _encodeLength(len(value)) + value
 
 
 def removeSequence(string):
+    """
+    Remove a sequence from a string.
+
+    Args:
+        string: write your description
+    """
     _checkSequenceError(string=string, start=bytesHex0, expected="30")
 
     length, lengthLen = _readLength(string[1:])
@@ -77,6 +122,12 @@ def removeSequence(string):
 
 
 def removeInteger(string):
+    """
+    Remove an integer from a string.
+
+    Args:
+        string: write your description
+    """
     _checkSequenceError(string=string, start=bytesHexB, expected="02")
 
     length, lengthLen = _readLength(string[1:])
@@ -92,6 +143,12 @@ def removeInteger(string):
 
 
 def removeObject(string):
+    """
+    Remove all the objects from a string.
+
+    Args:
+        string: write your description
+    """
     _checkSequenceError(string=string, start=bytesHexF, expected="06")
 
     length, lengthLen = _readLength(string[1:])
@@ -114,6 +171,12 @@ def removeObject(string):
 
 
 def removeBitString(string):
+    """
+    Remove a bit string from a byte string.
+
+    Args:
+        string: write your description
+    """
     _checkSequenceError(string=string, start=bytesHexC, expected="03")
 
     length, lengthLen = _readLength(string[1:])
@@ -124,6 +187,12 @@ def removeBitString(string):
 
 
 def removeOctetString(string):
+    """
+    Remove an octet string from the end of a string.
+
+    Args:
+        string: write your description
+    """
     _checkSequenceError(string=string, start=bytesHexD, expected="04")
 
     length, lengthLen = _readLength(string[1:])
@@ -134,6 +203,12 @@ def removeOctetString(string):
 
 
 def removeConstructed(string):
+    """
+    Remove the Constructed tag body and rest from the string.
+
+    Args:
+        string: write your description
+    """
     s0 = _extractFirstInt(string)
     if (s0 & hex224) != hex129:
         raise Exception("wanted constructed tag (0xa0-0xbf), got 0x%02x" % s0)
@@ -147,6 +222,12 @@ def removeConstructed(string):
 
 
 def fromPem(pem):
+    """
+    Decodes a PEM string to a base64 - encoded string.
+
+    Args:
+        pem: write your description
+    """
     t = "".join([
         l.strip() for l in pem.splitlines()
         if l and not l.startswith("-----")
@@ -155,6 +236,13 @@ def fromPem(pem):
 
 
 def toPem(der, name):
+    """
+    Returns a PEM string from a DER encoded DER.
+
+    Args:
+        der: write your description
+        name: write your description
+    """
     b64 = toString(Base64.encode(der))
     lines = ["-----BEGIN " + name + "-----\n"]
     lines.extend([
@@ -167,6 +255,12 @@ def toPem(der, name):
 
 
 def _encodeLength(length):
+    """
+    Encode length as a hex string.
+
+    Args:
+        length: write your description
+    """
     assert length >= 0
 
     if length < hex160:
@@ -183,6 +277,12 @@ def _encodeLength(length):
 
 
 def _encodeNumber(n):
+    """
+    Encode a number using the standard Base 128 encoding.
+
+    Args:
+        n: write your description
+    """
     b128Digits = []
     while n:
         b128Digits.insert(0, (n & hex127) | hex160)
@@ -197,6 +297,12 @@ def _encodeNumber(n):
 
 
 def _readLength(string):
+    """
+    Read length.
+
+    Args:
+        string: write your description
+    """
     num = _extractFirstInt(string)
     if not (num & hex160):
         return (num & hex127), 1
@@ -210,6 +316,12 @@ def _readLength(string):
 
 
 def _readNumber(string):
+    """
+    Read a number from a string.
+
+    Args:
+        string: write your description
+    """
     number = 0
     lengthLen = 0
     while True:
@@ -230,6 +342,14 @@ def _readNumber(string):
 
 
 def _checkSequenceError(string, start, expected):
+    """
+    Checks that the string starts with the expected sequence number.
+
+    Args:
+        string: write your description
+        start: write your description
+        expected: write your description
+    """
     if not string.startswith(start):
         raise Exception(
             "wanted sequence (0x%s), got 0x%02x" %
@@ -238,4 +358,10 @@ def _checkSequenceError(string, start, expected):
 
 
 def _extractFirstInt(string):
+    """
+    Extract the first integer from a string.
+
+    Args:
+        string: write your description
+    """
     return string[0] if isinstance(string[0], intTypes) else ord(string[0])

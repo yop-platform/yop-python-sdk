@@ -25,11 +25,26 @@ class RsaEncryptor(encryptor.Encryptor):
     '''
 
     def __init__(self, private_key=None, public_key=None):
+        """
+        Initializes the instance with the appropriate logger and private key.
+
+        Args:
+            self: write your description
+            private_key: write your description
+            public_key: write your description
+        """
         self.logger = yop_logger.get_logger()
         self.private_key = private_key
         self.public_key = public_key
 
     def get_random_key_readable(self, key_size=16):
+        """
+        Generate a random key that can be used for authentication.
+
+        Args:
+            self: write your description
+            key_size: write your description
+        """
         # 生成随机密钥
         ulen = int(key_size // 4 * 3)
         key = base64.b64encode(os.urandom(ulen))
@@ -61,6 +76,15 @@ class RsaEncryptor(encryptor.Encryptor):
         return verifier.verify(h, yop_security_utils.decode_base64(signature))
 
     def envelope_encrypt(self, content, private_key=None, public_key=None):
+        """
+        Encrypts the content with the given private key and public key.
+
+        Args:
+            self: write your description
+            content: write your description
+            private_key: write your description
+            public_key: write your description
+        """
         # 封装数字信封
 
         if None is private_key:
@@ -89,6 +113,15 @@ class RsaEncryptor(encryptor.Encryptor):
         return '$'.join(cigher_text)
 
     def envelope_decrypt(self, content, private_key=None, public_key=None):
+        """
+        Decrypt Envelope Decryption
+
+        Args:
+            self: write your description
+            content: write your description
+            private_key: write your description
+            public_key: write your description
+        """
         # 拆开数字信封
         args = content.split('$')
         if len(args) != 4:

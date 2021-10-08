@@ -3,6 +3,19 @@ from random import SystemRandom
 
 class CurveFp:
     def __init__(self, A, B, P, N, Gx, Gy, name):
+        """
+        Initialize the instance of the G2C function
+
+        Args:
+            self: write your description
+            A: write your description
+            B: write your description
+            P: write your description
+            N: write your description
+            Gx: write your description
+            Gy: write your description
+            name: write your description
+        """
         self.A = A
         self.B = B
         self.P = P
@@ -24,14 +37,40 @@ sm2p256v1 = CurveFp(
 
 
 def multiply(a, n, N, A, P):
+    """
+    Multiply a by n using Jacobian A and Jacobian P.
+
+    Args:
+        a: write your description
+        n: write your description
+        N: write your description
+        A: write your description
+        P: write your description
+    """
     return fromJacobian(jacobianMultiply(toJacobian(a), n, N, A, P), P)
 
 
 def add(a, b, A, P):
+    """
+    Jacobian summation of two Gaussians.
+
+    Args:
+        a: write your description
+        b: write your description
+        A: write your description
+        P: write your description
+    """
     return fromJacobian(jacobianAdd(toJacobian(a), toJacobian(b), A, P), P)
 
 
 def inv(a, n):
+    """
+    Invert a number n.
+
+    Args:
+        a: write your description
+        n: write your description
+    """
     if a == 0:
         return 0
     lm, hm = 1, 0
@@ -44,17 +83,38 @@ def inv(a, n):
 
 
 def toJacobian(Xp_Yp):
+    """
+    Convert a tuple of Xp Yp coordinates to a Jacobian.
+
+    Args:
+        Xp_Yp: write your description
+    """
     Xp, Yp = Xp_Yp
     return (Xp, Yp, 1)
 
 
 def fromJacobian(Xp_Yp_Zp, P):
+    """
+    From Jacobian basis to Hessian.
+
+    Args:
+        Xp_Yp_Zp: write your description
+        P: write your description
+    """
     Xp, Yp, Zp = Xp_Yp_Zp
     z = inv(Zp, P)
     return ((Xp * z**2) % P, (Yp * z**3) % P)
 
 
 def jacobianDouble(Xp_Yp_Zp, A, P):
+    """
+    Returns the Jacobian for the given Jacobian parameters.
+
+    Args:
+        Xp_Yp_Zp: write your description
+        A: write your description
+        P: write your description
+    """
     Xp, Yp, Zp = Xp_Yp_Zp
     if not Yp:
         return (0, 0, 0)
@@ -68,6 +128,15 @@ def jacobianDouble(Xp_Yp_Zp, A, P):
 
 
 def jacobianAdd(Xp_Yp_Zp, Xq_Yq_Zq, A, P):
+    """
+    Jacobian for additive two - qubit matrices.
+
+    Args:
+        Xp_Yp_Zp: write your description
+        Xq_Yq_Zq: write your description
+        A: write your description
+        P: write your description
+    """
     Xp, Yp, Zp = Xp_Yp_Zp
     Xq, Yq, Zq = Xq_Yq_Zq
     if not Yp:
@@ -94,6 +163,16 @@ def jacobianAdd(Xp_Yp_Zp, Xq_Yq_Zq, A, P):
 
 
 def jacobianMultiply(Xp_Yp_Zp, n, N, A, P):
+    """
+    Multiply the Jacobian of a basis function Xp_Yp_Zp by a
+
+    Args:
+        Xp_Yp_Zp: write your description
+        n: write your description
+        N: write your description
+        A: write your description
+        P: write your description
+    """
     Xp, Yp, Zp = Xp_Yp_Zp
     if Yp == 0 or n == 0:
         return (0, 0, 1)
@@ -109,25 +188,62 @@ def jacobianMultiply(Xp_Yp_Zp, n, N, A, P):
 
 class PrivateKey:
     def __init__(self, curve=sm2p256v1, secret=None):
+        """
+        Curve construction.
+
+        Args:
+            self: write your description
+            curve: write your description
+            sm2p256v1: write your description
+            secret: write your description
+        """
         self.curve = curve
         self.secret = secret or SystemRandom().randrange(1, curve.N)
 
     def publicKey(self):
+        """
+        Return the public key of this key.
+
+        Args:
+            self: write your description
+        """
         curve = self.curve
         xPublicKey, yPublicKey = multiply((curve.Gx, curve.Gy), self.secret, A=curve.A, P=curve.P, N=curve.N)
         return PublicKey(xPublicKey, yPublicKey, curve)
 
     def toString(self):
+        """
+        Returns the secret as a hex string.
+
+        Args:
+            self: write your description
+        """
         return "{}".format(str(hex(self.secret))[2:].zfill(64))
 
 
 class PublicKey:
     def __init__(self, x, y, curve):
+        """
+        Initialize the point
+
+        Args:
+            self: write your description
+            x: write your description
+            y: write your description
+            curve: write your description
+        """
         self.x = x
         self.y = y
         self.curve = curve
 
     def toString(self, compressed=True):
+        """
+        Returns a string representation of the point.
+
+        Args:
+            self: write your description
+            compressed: write your description
+        """
         return {
             True: str(hex(self.x))[2:-1],
             False: "{}{}".format(str(hex(self.x))[2:-1].zfill(64), str(hex(self.y))[2:-1].zfill(64))

@@ -22,15 +22,39 @@ if pyVersion.major == 3:
     intTypes = (int, float)
 
     def toString(string):
+        """
+        Return a string decoded from a unicode string.
+
+        Args:
+            string: write your description
+        """
         return string.decode("latin-1")
 
     def toBytes(string):
+        """
+        Convert a string to bytes.
+
+        Args:
+            string: write your description
+        """
         return string.encode("latin-1")
 
     def safeBinaryFromHex(hexString):
+        """
+        Converts a hex string to a binary string.
+
+        Args:
+            hexString: write your description
+        """
         return unhexlify(hexString)
 
     def safeHexFromBinary(byteString):
+        """
+        Return a safe hex string from a binary string.
+
+        Args:
+            byteString: write your description
+        """
         return hexlify(byteString)
 
     def unpad(padded_data, block_size=BLOCK_SIZE):
@@ -55,15 +79,39 @@ else:
     intTypes = (int, float, long)  # noqa
 
     def toString(string):
+        """
+        Convert string to unicode.
+
+        Args:
+            string: write your description
+        """
         return string
 
     def toBytes(string):
+        """
+        Convert a string to bytes.
+
+        Args:
+            string: write your description
+        """
         return string
 
     def safeBinaryFromHex(hexString):
+        """
+        Converts a hex string to a binary string.
+
+        Args:
+            hexString: write your description
+        """
         return unhexlify(hexString)
 
     def safeHexFromBinary(byteString):
+        """
+        Return a safe hex string from a binary string.
+
+        Args:
+            byteString: write your description
+        """
         return hexlify(byteString)
 
     def unpad(padded_data, block_size=BLOCK_SIZE):

@@ -6,6 +6,13 @@ from auth.v3signer.credentials import YopCredentials
 
 class Test(object):
     def test_post(self, client):
+        """
+        Test POST request.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/trade/order'
         params = {
             'orderId': '140676',
@@ -34,6 +41,13 @@ class Test(object):
             assertion.failure(res, '40042')
 
     def test_post_with_credentials(self, client):
+        """
+        Test POST request with credentials.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -65,6 +79,13 @@ class Test(object):
             assertion.failure(res, '40042')
 
     def test_post_failed(self, client):
+        """
+        Test that POST request succeeds when OPR00058 is not a success code.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/trade/order'
         params = {
             'parentMerchantNo': '10000470992',
@@ -84,6 +105,13 @@ class Test(object):
             assertion.failure(res, '40042')
 
     def test_post_404(self, client):
+        """
+        Test POSTing a 404 http resource
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         api = '/rest/v1.0/bank/xxx'
         params = {
             'name': '张三',

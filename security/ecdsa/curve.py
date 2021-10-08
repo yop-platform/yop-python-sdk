@@ -12,6 +12,21 @@ from .point import Point
 class CurveFp:
 
     def __init__(self, A, B, P, N, Gx, Gy, name, oid, nistName=None):
+        """
+        Initialize the object.
+
+        Args:
+            self: write your description
+            A: write your description
+            B: write your description
+            P: write your description
+            N: write your description
+            Gx: write your description
+            Gy: write your description
+            name: write your description
+            oid: write your description
+            nistName: write your description
+        """
         self.A = A
         self.B = B
         self.P = P
@@ -31,6 +46,12 @@ class CurveFp:
         return (p.y**2 - (p.x**3 + self.A * p.x + self.B)) % self.P == 0
 
     def length(self):
+        """
+        Length of the array
+
+        Args:
+            self: write your description
+        """
         return (1 + len("%x" % self.N)) // 2
 
 

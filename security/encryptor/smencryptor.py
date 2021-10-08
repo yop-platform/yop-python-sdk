@@ -16,6 +16,14 @@ class SmEncryptor(encryptor.Encryptor):
     '''
 
     def __init__(self, private_key=None, public_key_dict=None):
+        """
+        YOP  private_key  public_key_dict Y
+
+        Args:
+            self: write your description
+            private_key: write your description
+            public_key_dict: write your description
+        """
         self.logger = yop_logger.get_logger()
         self.sm2_crypt = sm2.CryptSM2()
 
@@ -61,6 +69,13 @@ class SmEncryptor(encryptor.Encryptor):
         return self.sm2_crypt.verify_with_sm3(sign_16, data, public_key)
 
     def load_yop_public_key(self, serial_no):
+        """
+        Load Yop public key.
+
+        Args:
+            self: write your description
+            serial_no: write your description
+        """
         public_key = self.yop_public_key_dict.get(serial_no)
         if public_key is None:
             public_key = YopCertLoader.load(serial_no=serial_no)

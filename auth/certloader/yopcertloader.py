@@ -7,6 +7,14 @@ class YopCertLoader:
     clientConfig = None
 
     def __init__(self, clientConfig=None, env=None):
+        """
+        Initializes the SDK client
+
+        Args:
+            self: self
+            clientConfig: config of client
+            env: run env
+        """
         self.logger = yop_logger.get_logger()
         self.path = clientConfig.sdk_config.get('yop_cert_store', '/tmp').get('path', '/tmp')
         self.env = env

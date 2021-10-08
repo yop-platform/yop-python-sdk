@@ -8,6 +8,13 @@ sys.path.append("./")
 
 class Test(object):
     def test_upload(self, client):
+        """
+        Uploads a file to the API and verifies the upload is successful.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         file_path = './LICENSE'
         # with open(file_path, mode='r', encoding='utf8') as f:
         api = '/yos/v1.0/mer/merchant/qual/upload'
@@ -19,6 +26,13 @@ class Test(object):
         assertion.success(res)
 
     def test_upload_with_credentials(self, client):
+        """
+        Test uploading with credentials.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -35,6 +49,13 @@ class Test(object):
         assertion.success(res)
 
     def test_upload_failed(self, client):
+        """
+        Test that uploading a file fails.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         file_path = './LICENSE'
         api = '/yos/v1.0/mer/merchant/qual/upload2'
         params = {

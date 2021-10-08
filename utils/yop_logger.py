@@ -9,6 +9,13 @@ import logging
 
 
 def get_logger(logger_name=__name__):
+    """
+    Get a logger.
+
+    Args:
+        logger_name: write your description
+        __name__: write your description
+    """
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.INFO)
     # logger.setLevel(logging.DEBUG)

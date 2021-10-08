@@ -19,6 +19,13 @@ isv_public_key = yop_security_utils.parse_rsa_pub_key(
 
 class Test(object):
     def test_envelope_self(self, client):
+        """
+        Encrypts and decrypts the given envelope.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type or pyVersion.major == 2:
             # TODO python2 下面ECB pad有问题
             return
@@ -38,6 +45,13 @@ class Test(object):
         assert plain == content
 
     def test_envelope_notify_16(self, client):
+        """
+        Decrypt response with isv_private_key and yop_public_key
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -55,6 +69,13 @@ class Test(object):
         assert plain == content
 
     def test_envelope_notify_32(self, client):
+        """
+         16/32 pad  的 的 RsaEncrypt
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -73,6 +94,13 @@ class Test(object):
         assert plain == content
 
     def test_envelope_notify_unpad(self, client):
+        """
+        Decrypts the response and verifies that it looks like an envelope with a public key.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 

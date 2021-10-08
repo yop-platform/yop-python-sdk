@@ -21,6 +21,13 @@ class Test(object):
     #     assert 0 == res
 
     def test_download(self, client):
+        """
+        Test download functionality.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -37,6 +44,13 @@ class Test(object):
         assert 0 == res
 
     def test_download_with_credentials(self, client):
+        """
+        Test downloading with credentials.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 
@@ -53,6 +67,13 @@ class Test(object):
         assert 0 == res
 
     def test_download_failed(self, client):
+        """
+        Test that downloading a file fails.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
         if 'sm' == client.cert_type:
             return
 

@@ -14,10 +14,25 @@ hexAt = "\x00"
 class PrivateKey:
 
     def __init__(self, curve=sm2p256v1, secret=None):
+        """
+        Curve construction.
+
+        Args:
+            self: write your description
+            curve: write your description
+            sm2p256v1: write your description
+            secret: write your description
+        """
         self.curve = curve
         self.secret = secret or RandomInteger.between(1, curve.N - 1)
 
     def publicKey(self):
+        """
+        Return public key as PublicKey object.
+
+        Args:
+            self: write your description
+        """
         curve = self.curve
         publicPoint = Math.multiply(
             p=curve.G,
@@ -29,9 +44,21 @@ class PrivateKey:
         return PublicKey(point=publicPoint, curve=curve)
 
     def toString(self):
+        """
+        Return the secret key as a string.
+
+        Args:
+            self: write your description
+        """
         return BinaryAscii.stringFromNumber(number=self.secret, length=self.curve.length())
 
     def toDer(self):
+        """
+        Return a DER - encoded representation of this EllipticCurve.
+
+        Args:
+            self: write your description
+        """
         encodedPublicKey = self.publicKey().toString(encoded=True)
 
         return encodeSequence(
@@ -42,15 +69,35 @@ class PrivateKey:
         )
 
     def toPem(self):
+        """
+        Return this Signer as a DER - encoded PEM.
+
+        Args:
+            self: write your description
+        """
         return toPem(der=toBytes(self.toDer()), name="EC PRIVATE KEY")
 
     @classmethod
     def fromPem(cls, string):
+        """
+        Create a PrivateKey from a DER encoded private key.
+
+        Args:
+            cls: write your description
+            string: write your description
+        """
         # privateKeyPem = string[string.index("-----BEGIN EC PRIVATE KEY-----"):]
         return cls.fromDer(fromPem(string))
 
     @classmethod
     def fromDer(cls, string):
+        """
+        Create a PrivateKey from a DER encoded string.
+
+        Args:
+            cls: write your description
+            string: write your description
+        """
         t, empty = removeSequence(string)
         if len(empty) != 0:
             raise Exception(
@@ -99,4 +146,13 @@ class PrivateKey:
 
     @classmethod
     def fromString(cls, string, curve=sm2p256v1):
+        """
+        Create a PrivateKey instance from a string.
+
+        Args:
+            cls: write your description
+            string: write your description
+            curve: write your description
+            sm2p256v1: write your description
+        """
         return PrivateKey(secret=BinaryAscii.numberFromString(string), curve=curve)

@@ -17,12 +17,28 @@ default_ecc_table = {
 
 class CryptSM2(object):
     def __init__(self, ecc_table=default_ecc_table):
+        """
+        Initializes the class with the ecc_table
+
+        Args:
+            self: write your description
+            ecc_table: write your description
+            default_ecc_table: write your description
+        """
         self.para_len = len(ecc_table['n'])
         self.ecc_a3 = (
             int(ecc_table['a'], base=16) + 3) % int(ecc_table['p'], base=16)
         self.ecc_table = ecc_table
 
     def _kg(self, k, Point):  # kP运算
+        """
+        Kruskal s k - th point
+
+        Args:
+            self: write your description
+            k: write your description
+            Point: write your description
+        """
         Point = '%s%s' % (Point, '1')
         mask_str = '8'
         for i in range(self.para_len - 1):
@@ -43,6 +59,13 @@ class CryptSM2(object):
         return self._convert_jacb_to_nor(Temp)
 
     def _double_point(self, Point):  # 倍点
+        """
+        Returns the double point form of the given point.
+
+        Args:
+            self: write your description
+            Point: write your description
+        """
         l = len(Point)
         len_2 = 2 * self.para_len
         if l < self.para_len * 2:
@@ -85,6 +108,14 @@ class CryptSM2(object):
             return form % (x3, y3, z3)
 
     def _add_point(self, P1, P2):  # 点加函数，P2点为仿射坐标即z=1，P1为Jacobian加重射影坐标
+        """
+        Add a point to the ecc table
+
+        Args:
+            self: write your description
+            P1: write your description
+            P2: write your description
+        """
         len_2 = 2 * self.para_len
         l1 = len(P1)
         l2 = len(P2)
@@ -124,6 +155,13 @@ class CryptSM2(object):
             return form % (X3, Y3, Z3)
 
     def _convert_jacb_to_nor(self, Point):  # Jacobian加重射影坐标转换成仿射坐标
+        """
+        Convert the point from Jacobian to nor.
+
+        Args:
+            self: write your description
+            Point: write your description
+        """
         len_2 = 2 * self.para_len
         x = int(Point[0:self.para_len], 16)
         y = int(Point[self.para_len:len_2], 16)
@@ -142,6 +180,15 @@ class CryptSM2(object):
             return None
 
     def sign(self, data, private_key, K):  # 签名函数, data消息的hash，private_key私钥，K随机数，均为16进制字符串
+        """
+        Sign data with private_key.
+
+        Args:
+            self: write your description
+            data: write your description
+            private_key: write your description
+            K: write your description
+        """
         E = binascii.hexlify(data)  # 消息转化为16进制字符串
         e = int(E, 16)
 
@@ -162,6 +209,15 @@ class CryptSM2(object):
             return '%064x%064x' % (R, S)
 
     def verify(self, Sign, data, public_key):
+        """
+        Verify the signature of data with the public key public_key.
+
+        Args:
+            self: write your description
+            Sign: write your description
+            data: write your description
+            public_key: write your description
+        """
         # 验签函数，sign签名r||s，E消息hash，public_key公钥
         r = int(Sign[0:self.para_len], 16)
         s = int(Sign[self.para_len:2 * self.para_len], 16)
@@ -186,6 +242,14 @@ class CryptSM2(object):
         return (r == ((e + x) % int(self.ecc_table['n'], base=16)))
 
     def encrypt(self, data, public_key):
+        """
+        Encrypt data with public_key.
+
+        Args:
+            self: write your description
+            data: write your description
+            public_key: write your description
+        """
         # 加密函数，data消息(bytes)
         msg = data.hex()  # 消息转化为16进制字符串
         k = func.random_hex(self.para_len)
@@ -206,6 +270,14 @@ class CryptSM2(object):
             return bytes.fromhex('%s%s%s' % (C1, C3, C2))
 
     def decrypt(self, data, private_key):
+        """
+        Decrypt data with private key.
+
+        Args:
+            self: write your description
+            data: write your description
+            private_key: write your description
+        """
         # 解密函数，data密文（bytes）
         data = data.hex()
         len_2 = 2 * self.para_len
@@ -245,6 +317,16 @@ class CryptSM2(object):
         return e
 
     def sign_with_sm3(self, data, public_key, private_key, random_hex_str=None):
+        """
+        Sign data with SM3 - compressed format.
+
+        Args:
+            self: write your description
+            data: write your description
+            public_key: write your description
+            private_key: write your description
+            random_hex_str: write your description
+        """
         sign_data = binascii.a2b_hex(self._sm3_z(data, public_key).encode('utf-8'))
         if random_hex_str is None:
             random_hex_str = func.random_hex(self.para_len)
@@ -252,5 +334,14 @@ class CryptSM2(object):
         return sign
 
     def verify_with_sm3(self, sign, data, public_key):
+        """
+        Verify the signature on the data using the SM3 algorithm.
+
+        Args:
+            self: write your description
+            sign: write your description
+            data: write your description
+            public_key: write your description
+        """
         sign_data = binascii.a2b_hex(self._sm3_z(data, public_key).encode('utf-8'))
         return self.verify(sign, sign_data, public_key)

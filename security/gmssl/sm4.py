@@ -48,6 +48,14 @@ SM4_DECRYPT = 1
 class CryptSM4(object):
 
     def __init__(self, mode=SM4_ENCRYPT):
+        """
+        Initialize the encryption key.
+
+        Args:
+            self: write your description
+            mode: write your description
+            SM4_ENCRYPT: write your description
+        """
         self.sk = [0]*32
         self.mode = mode
     # Calculating round encryption key.
@@ -56,6 +64,13 @@ class CryptSM4(object):
 
     @classmethod
     def _round_key(cls, ka):
+        """
+        Computes the round key for a given 32 - bit integer.
+
+        Args:
+            cls: write your description
+            ka: write your description
+        """
         b = [0, 0, 0, 0]
         a = put_uint32_be(ka)
         b[0] = SM4_BOXES_TABLE[a[0]]
@@ -75,10 +90,27 @@ class CryptSM4(object):
     # return the contents of encryption/decryption contents.
     @classmethod
     def _f(cls, x0, x1, x2, x3, rk):
+        """
+        Defined in equation 3. 5. 3 - 1 page 970.
+
+        Args:
+            cls: write your description
+            x0: write your description
+            x1: write your description
+            x2: write your description
+            x3: write your description
+            rk: write your description
+        """
         # "T algorithm" == "L algorithm" + "t algorithm".
         # args:    [in] a: a is a 32 bits unsigned value;
         # return: c: c is calculated with line algorithm "L" and nonline algorithm "t"
         def _sm4_l_t(ka):
+            """
+            Calculates the L and T values of the SM4 checksum.
+
+            Args:
+                ka: write your description
+            """
             b = [0, 0, 0, 0]
             a = put_uint32_be(ka)
             b[0] = SM4_BOXES_TABLE[a[0]]
@@ -91,6 +123,14 @@ class CryptSM4(object):
         return (x0 ^ _sm4_l_t(x1 ^ x2 ^ x3 ^ rk))
 
     def set_key(self, key, mode):
+        """
+        Encrypts the SM4 key.
+
+        Args:
+            self: write your description
+            key: write your description
+            mode: write your description
+        """
         key = bytes_to_list(key)
         MK = [0, 0, 0, 0]
         k = [0]*36
@@ -111,6 +151,14 @@ class CryptSM4(object):
                 self.sk[31 - idx] = t
 
     def one_round(self, sk, in_put):
+        """
+        Performs one round of the FFT.
+
+        Args:
+            self: write your description
+            sk: write your description
+            in_put: write your description
+        """
         out_put = []
         ulbuf = [0]*36
         ulbuf[0] = get_uint32_be(in_put[0:4])
@@ -127,6 +175,13 @@ class CryptSM4(object):
         return out_put
 
     def crypt_ecb(self, input_data):
+        """
+        Encrypts and decrypts an ECB block.
+
+        Args:
+            self: write your description
+            input_data: write your description
+        """
         # SM4-ECB block encryption/decryption
         input_data = bytes_to_list(input_data)
         if self.mode == SM4_ENCRYPT:
@@ -143,6 +198,14 @@ class CryptSM4(object):
         return list_to_bytes(output_data)
 
     def crypt_cbc(self, iv, input_data):
+        """
+        Encrypts and decrypts input_data using the specified initialization vector.
+
+        Args:
+            self: write your description
+            iv: write your description
+            input_data: write your description
+        """
         # SM4-CBC buffer encryption/decryption
         i = 0
         output_data = []
