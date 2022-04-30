@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from auth.v3signer.credentials import YopCredentials
-import test.assertion as assertion
+import tests.assertion as assertion
 import os
 import sys
 sys.path.append("./")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import test.assertion as assertion
+import tests.assertion as assertion
 from auth.v3signer.credentials import YopCredentials
 
 

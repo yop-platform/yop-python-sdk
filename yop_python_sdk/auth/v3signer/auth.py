@@ -16,8 +16,8 @@ import urllib
 import simplejson
 import hashlib
 import datetime
-import utils.yop_logger as yop_logger
-import utils.yop_security_utils as yop_security_utils
+import yop_python_sdk.utils.yop_logger as yop_logger
+import yop_python_sdk.utils.yop_security_utils as yop_security_utils
 
 EXPIRATION_IN_SECONDS = '1800'
 _SIGV4_TIMESTAMP_FORMAT = "%Y%m%dT%H%M%S"
@@ -130,7 +130,8 @@ class SigV3Authenticator:
         elif 'POST' == http_method and not json_param and post_params:
             query_str = self.get_query_str(post_params.items())
 
-        self.logger.debug('http_method:{}, query_str:{}'.format(http_method, query_str))
+        self.logger.debug(
+            'http_method:{}, query_str:{}'.format(http_method, query_str))
 
         headers = {}
         yop_request_id = str(uuid.uuid4())
@@ -138,18 +139,24 @@ class SigV3Authenticator:
         if json_param:
             yop_content_sha256 = self.content_sha256(json_param)
             headers['x-yop-content-sha256'] = yop_content_sha256
-            canonical_header_str = canonical_header_str + '\nx-yop-content-sha256:' + quote(yop_content_sha256, 'utf-8')
+            canonical_header_str = canonical_header_str + \
+                '\nx-yop-content-sha256:' + quote(yop_content_sha256, 'utf-8')
             signed_headers = 'x-yop-appkey;x-yop-content-sha256;x-yop-request-id'
         else:
             signed_headers = 'x-yop-appkey;x-yop-request-id'
-        canonical_header_str = canonical_header_str + '\nx-yop-request-id:' + quote(yop_request_id, 'utf-8')
+        canonical_header_str = canonical_header_str + \
+            '\nx-yop-request-id:' + quote(yop_request_id, 'utf-8')
 
-        auth_str = protocol_version + '/' + app_key + '/' + yop_date + '/' + expired_seconds
-        canonical_request = auth_str + '\n' + http_method + '\n' + url + '\n' + query_str + '\n' + canonical_header_str
+        auth_str = protocol_version + '/' + app_key + \
+            '/' + yop_date + '/' + expired_seconds
+        canonical_request = auth_str + '\n' + http_method + '\n' + \
+            url + '\n' + query_str + '\n' + canonical_header_str
 
-        signature, algorithm, hash_algorithm = credentials.encryptor.signature(canonical_request)
+        signature, algorithm, hash_algorithm = credentials.encryptor.signature(
+            canonical_request)
 
-        self.logger.debug('canonical_header_str:\n{}'.format(canonical_header_str))
+        self.logger.debug(
+            'canonical_header_str:\n{}'.format(canonical_header_str))
         self.logger.debug('signed_headers:{}'.format(signed_headers))
         self.logger.debug('auth_str:{}'.format(auth_str))
         self.logger.debug('canonical_request:\n{}'.format(canonical_request))
@@ -158,7 +165,8 @@ class SigV3Authenticator:
         authorization_header = algorithm + ' ' + auth_str + '/' + \
             signed_headers + '/' + signature
 
-        self.logger.debug('authorization_header:{}'.format(authorization_header))
+        self.logger.debug(
+            'authorization_header:{}'.format(authorization_header))
 
         headers['authorization'] = authorization_header + '$' + hash_algorithm
         headers['x-yop-session-id'] = self.session_id
@@ -278,10 +286,12 @@ class SigV3Authenticator:
         """
         # 验签
         if res.headers.__contains__('x-yop-sign'):
-            text = res.text.replace('\t', '').replace('\n', '').replace(' ', '')
+            text = res.text.replace('\t', '').replace(
+                '\n', '').replace(' ', '')
             signature = res.headers['x-yop-sign']
             serial_no = res.headers.get('x-yop-serial-no', default=None)
-            sig_flag = self.yop_encryptor_dict[cert_type].verify_signature(text, signature, serial_no=serial_no)
+            sig_flag = self.yop_encryptor_dict[cert_type].verify_signature(
+                text, signature, serial_no=serial_no)
             if not sig_flag:
                 self.logger.info(
                     'signature verify failed, text:{}, signature:{}'.format(

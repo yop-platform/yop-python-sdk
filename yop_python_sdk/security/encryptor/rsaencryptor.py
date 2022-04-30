@@ -6,12 +6,12 @@ from . import encryptor
 from Crypto import Random
 from Crypto.Hash import SHA256
 from Crypto.Signature import PKCS1_v1_5
-import utils.yop_logger as yop_logger
-import utils.yop_security_utils as yop_security_utils
+import yop_python_sdk.utils.yop_logger as yop_logger
+import yop_python_sdk.utils.yop_security_utils as yop_security_utils
 from builtins import bytes
 from Crypto.Cipher import AES
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
-from security.ecdsa.utils.compatibility import pad, unpad
+from yop_python_sdk.security.ecdsa.utils.compatibility import pad, unpad
 
 YOP_RSA_ALGORITHM = 'YOP-RSA2048-SHA256'
 
@@ -94,18 +94,22 @@ class RsaEncryptor(encryptor.Encryptor):
             public_key = self.public_key
 
         random_key = self.get_random_key_readable(16)
-        self.logger.debug('random_key type:{}, random_key value:{}\n'.format(type(random_key), random_key))
+        self.logger.debug('random_key type:{}, random_key value:{}\n'.format(
+            type(random_key), random_key))
 
         # 用随机密钥对数据和签名进行加密
         cipher = AES.new(random_key, AES.MODE_ECB)
         # 对数据进行签名
-        sign_to_base64, algorithm, hash_algorithm = self.signature(content, private_key)
-        encrypted_data = cipher.encrypt(pad(content + '$' + sign_to_base64, 16))
+        sign_to_base64, algorithm, hash_algorithm = self.signature(
+            content, private_key)
+        encrypted_data = cipher.encrypt(
+            pad(content + '$' + sign_to_base64, 16))
         encrypted_data = yop_security_utils.encode_base64(encrypted_data)
 
         # 对密钥加密
         cipher = Cipher_pkcs1_v1_5.new(public_key)
-        encrypted_random_key = yop_security_utils.encode_base64(cipher.encrypt(random_key))
+        encrypted_random_key = yop_security_utils.encode_base64(
+            cipher.encrypt(random_key))
         cigher_text = [encrypted_random_key]
         cigher_text.append(encrypted_data)
         cigher_text.append(u'AES')

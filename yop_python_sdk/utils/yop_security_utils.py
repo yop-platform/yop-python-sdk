@@ -8,8 +8,8 @@
 from builtins import range
 import base64
 from Crypto.PublicKey import RSA
-from security.crc64 import Crc64
-import utils.yop_logger as yop_logger
+from yop_python_sdk.security.crc64 import Crc64
+import yop_python_sdk.utils.yop_logger as yop_logger
 
 try:
     from importlib import reload
@@ -34,7 +34,8 @@ def parse_rsa_pri_key(private_key_string):
     Args:
         private_key_string: write your description
     """
-    private_key = '-----BEGIN PRIVATE KEY-----\n' + private_key_string + '\n-----END PRIVATE KEY-----'
+    private_key = '-----BEGIN PRIVATE KEY-----\n' + \
+        private_key_string + '\n-----END PRIVATE KEY-----'
     return RSA.importKey(private_key)
 
 
@@ -45,7 +46,8 @@ def parse_rsa_pub_key(public_key_string):
     Args:
         public_key_string: write your description
     """
-    public_key = '-----BEGIN PUBLIC KEY-----\n' + public_key_string + '\n-----END PUBLIC KEY-----'
+    public_key = '-----BEGIN PUBLIC KEY-----\n' + \
+        public_key_string + '\n-----END PUBLIC KEY-----'
     return RSA.importKey(public_key)
 
 

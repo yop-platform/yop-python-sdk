@@ -33,5 +33,6 @@ class Test(object):
         # QA
         if 'qa' == client.env:
             sign_2 = "pEUtFQeSbFaZs1qd8h4AopxwDMOOEUpX4k58zwQQHNcTznTs0U-GLaxsh9OPFCcn_gDgf2jMiC2Fa_5a5B2Fhw"
-            result = client.yop_encryptor_dict['SM2'].verify_signature(text, sign_2, serial_no='275568425014')
+            result = client.yop_encryptor_dict['SM2'].verify_signature(
+                text, sign_2, serial_no='275568425014')
             assert result

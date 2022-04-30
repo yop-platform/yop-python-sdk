@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from auth.certloader.yopcertloader import YopCertLoader
+from yop_python_sdk.auth.certloader.yopcertloader import YopCertLoader
 import binascii
 from ..gmssl import sm2
 from . import encryptor
-import utils.yop_logger as yop_logger
-import utils.yop_security_utils as yop_security_utils
+import yop_python_sdk.utils.yop_logger as yop_logger
+import yop_python_sdk.utils.yop_security_utils as yop_security_utils
 
 YOP_SM_ALGORITHM = 'YOP-SM2-SM3'
 
@@ -43,7 +43,8 @@ class SmEncryptor(encryptor.Encryptor):
         if private_key is None:
             private_key = self.private_key
 
-        sign_16 = self.sm2_crypt.sign_with_sm3(data, self.public_key, private_key)
+        sign_16 = self.sm2_crypt.sign_with_sm3(
+            data, self.public_key, private_key)
         sign_bytes = binascii.unhexlify(sign_16)
         sign_base64 = yop_security_utils.encode_base64(sign_bytes)
         return sign_base64, YOP_SM_ALGORITHM, "SM3"

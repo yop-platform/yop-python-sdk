@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_logger as yop_logger
+import yop_python_sdk.utils.yop_logger as yop_logger
 
 
 class Encryptor:

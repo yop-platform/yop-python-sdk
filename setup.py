@@ -10,7 +10,7 @@ with open("README.MD", "r") as f:
 
 setup(
     name='yop-python-sdk',
-    version='4.1.1',
+    version='4.2.0',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -19,7 +19,7 @@ setup(
     url='https://github.com/yop-platform/yop-python-sdk',
     license='Apache License',
     platforms=["all"],
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(),
     classifiers=[
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
@@ -39,11 +39,11 @@ setup(
     # pip3 install pycryptodome
     install_requires=[
         'future>=0.18.2',
-        'pycryptodome>=3.10.1',
-        'pyOpenSSL>=20.0.1',
-        'python-dateutil>=2.8.1',
+        'pycryptodome>=3.14.1',
+        'pyOpenSSL>=22.0.0',
+        'python-dateutil>=2.8.2',
         'requests_toolbelt>=0.9.1',
-        'simplejson>=3.17.2',
+        'simplejson>=3.17.6',
     ],
     # python_requires='~=2.7,~=3.7',
     setup_requires=[

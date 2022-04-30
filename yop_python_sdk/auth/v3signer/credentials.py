@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from security.ecdsa.privateKey import PrivateKey
-from security.encryptor.rsaencryptor import RsaEncryptor
-from security.encryptor.smencryptor import SmEncryptor
+from yop_python_sdk.security.ecdsa.privateKey import PrivateKey
+from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
+from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
 from Crypto.PublicKey import RSA
 
 

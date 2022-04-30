@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import os
-from security.encryptor.rsaencryptor import RsaEncryptor
-from security.encryptor.smencryptor import SmEncryptor
+from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
+from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
 import simplejson
 from simplejson.decoder import JSONDecodeError
 import platform
 import locale
-from auth.v3signer.auth import SigV3AuthProvider
+from yop_python_sdk.auth.v3signer.auth import SigV3AuthProvider
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
-from client.yop_client_config import YopClientConfig
-import utils.yop_logger as yop_logger
+from yop_python_sdk.client.yop_client_config import YopClientConfig
+import yop_python_sdk.utils.yop_logger as yop_logger
 
-SDK_VERSION = '4.1.1'
+SDK_VERSION = '4.2.0'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -35,7 +35,7 @@ class YopClient:
 
     def __init__(self, clientConfig=None, cert_type=None, env=None):
         """
-        Yop的      
+        Yop的
 
         Args:
             self: write your description
@@ -53,7 +53,8 @@ class YopClient:
         self.yop_encryptor_dict = {}
         for cert_type, yop_public_key_dict in clientConfig.sdk_config['yop_public_key'].items():
             if len(yop_public_key_dict) > 0:
-                self.yop_encryptor_dict[cert_type] = self.get_encryptor(cert_type, yop_public_key_dict)
+                self.yop_encryptor_dict[cert_type] = self.get_encryptor(
+                    cert_type, yop_public_key_dict)
 
         self.clientConfig = clientConfig
         self.authProvider = SigV3AuthProvider(self.yop_encryptor_dict)
@@ -99,7 +100,8 @@ class YopClient:
         #         query_params[k] = quote(str(v), 'utf-8')
 
         url = ''.join([basePath, api])
-        res = self._get_request(url, query_params=query_params, headers=headers)
+        res = self._get_request(
+            url, query_params=query_params, headers=headers)
         self.logger.info(
             'request:\nGET {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'.format(
                 url, headers, query_params, res.headers, res.text, res.elapsed.microseconds / 1000.))
@@ -142,7 +144,8 @@ class YopClient:
         #         query_params[k] = quote(str(v), 'utf-8')
 
         url = ''.join([basePath, api])
-        res = self._get_request(url, query_params=query_params, headers=headers)
+        res = self._get_request(
+            url, query_params=query_params, headers=headers)
         self.logger.info(
             'request:\nGET {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\ntime:{}ms\n'.format(
                 url, headers, query_params, res.headers, res.elapsed.microseconds / 1000.))
@@ -157,7 +160,8 @@ class YopClient:
                 self.logger.warn(res.text)
                 raise e
 
-        filename = res.headers['Content-Disposition'].split('; ')[1].replace('filename=', '')
+        filename = res.headers['Content-Disposition'].split(
+            '; ')[1].replace('filename=', '')
         filename = filename[filename.rindex('/') + 1:len(filename)]
 
         try:
@@ -166,7 +170,8 @@ class YopClient:
             full_filename = file_path + '/' + filename
             with open(full_filename, "wb+") as file:
                 file.write(res.content)
-                authorization._verify_res_download(res, credentials.get_cert_type(), file)
+                authorization._verify_res_download(
+                    res, credentials.get_cert_type(), file)
             return 0
         except OSError as e:
             self.logger.warn('找不到文件路径:{}'.format(file_path))
@@ -291,7 +296,8 @@ class YopClient:
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
 
-        authorization._verify_res_upload(res, credentials.get_cert_type(), post_params)
+        authorization._verify_res_upload(
+            res, credentials.get_cert_type(), post_params)
         try:
             return simplejson.loads(res.text)
         except JSONDecodeError as e:
@@ -309,7 +315,8 @@ class YopClient:
             params: write your description
             headers: write your description
         """
-        res = requests.post(url=url, headers=headers, data=payload, params=params)
+        res = requests.post(url=url, headers=headers,
+                            data=payload, params=params)
         self.logger.debug(
             'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'.format(
                 url, headers, params, res.headers, res.text, res.elapsed.microseconds / 1000.))

@@ -36,10 +36,12 @@ class Test(object):
             clientConfig.get_credentials().get_priKey(),
             clientConfig.get_yop_public_key().get('default'))
 
-        enc = encryptor.envelope_encrypt(content, isv_private_key, isv_public_key)
+        enc = encryptor.envelope_encrypt(
+            content, isv_private_key, isv_public_key)
         print('enc:{}'.format(enc))
 
-        plain = encryptor.envelope_decrypt(enc, isv_private_key, isv_public_key)
+        plain = encryptor.envelope_decrypt(
+            enc, isv_private_key, isv_public_key)
         print('plain:{}'.format(plain))
 
         assert plain == content
@@ -63,7 +65,8 @@ class Test(object):
             isv_private_key,
             list(clientConfig.get_yop_public_key().get('RSA2048').values())[0])
 
-        plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
+        # , isv_private_key, yop_public_key)
+        plain = encryptor.envelope_decrypt(response)
         print('plain:{}'.format(plain))
 
         assert plain == content
@@ -83,12 +86,14 @@ class Test(object):
         content = '{"date":"20181014000000","aaa":"","boolean":true,"SIZE":-14,"name":"易宝支付","dou":12.34}'
         response = 'AT320grqREB__reG5un3QbzBWQ0QfHzdHkHJW4_GmMzY4Qeg-ud_xLhCucVVxLGZQlKiJoH6BS26fVz47r49S6o_6OTUPMoxCdy-mqhPx0mF3LAvmQNV8v_bKingnMM--LiW6z8OE9i_e8-sJ2YrlmhI99AAVqpC-9Kdn_Mx1x0-i6ojv7TO0foUN3RjPomvX_43Vc2xJdJIWmYx18Z5aOrlz1Z8MiEXntx-W7cBI9veC9k3tb_Jkoc1QyyhyAU6za4sCjQq5InvhUUljN62dgHbEIiS8Jp3YOOy3bf0xy9eotKsybpGr63ZPpukdAYUGJVPfAqOXxMdokbxLGvSag$6DjZHtBf9YTJcPeQ6HmNEGSMuRMVRn1idDS18MweFPUrkCd-iBq06b6HDh0oG4ZSqW2ef_64MSOMKCnNWtFreuXpvVtlYikCZV7Tr_vYagaJ8tq3TGMlpZPuUGKmKSGpXS4V5zrzN9OTWUEQejqVoxQhPriKERXsl34ceS9Em_AHqPgWzeV5Cgfsn2it6SnOGMVTRNMB-G61m7J7rVjDlGLatMzGOPpjraj2iwTmkwFD7PQOhlHg4rPr17vdsJQOBvhAtGCrTp5pqLABRDOQefQCQ3P2z_BPg_GC3F44Osd_EzZ-PIXAha3ULFWM6g6iY8g88h0aCEZBrt0qmfjzDnl6seyuaeah6wC1hCVYmC6tWUfbW_2QIfkRMtxwGsfF7QXo2IplfkYbEdfIZoNejpBCA72RLKU6ApNiBSKQGvV4MT8IhbHlyMNjm4zCiAc5hvqy15z2pMM1CaKpKtU8jxq03H0sZvzr749dCPh5-O0BgoZST_D3eOlu7usjlKstxmIcBUYymbv0XgsNOEbzqzpQgc1-IkMdG_k17H33JXmi9Kxp1ezRjER9sqoG_oZEzjL7KP_PIFvUtAeJ5e4pdA$AES$SHA256'
 
-        clientConfig = YopClientConfig(config_file='config/yop_sdk_config_rsa_prod.json')
+        clientConfig = YopClientConfig(
+            config_file='config/yop_sdk_config_rsa_prod.json')
         encryptor = RsaEncryptor(
             isv_private_key,
             list(clientConfig.get_yop_public_key().get('RSA2048').values())[0])
 
-        plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
+        # , isv_private_key, yop_public_key)
+        plain = encryptor.envelope_decrypt(response)
         print('plain:{}'.format(plain))
 
         assert plain == content
@@ -112,7 +117,8 @@ class Test(object):
             list(clientConfig.get_yop_public_key().get(u'RSA2048').values())[0])
 
         try:
-            plain = encryptor.envelope_decrypt(response)  # , isv_private_key, yop_public_key)
+            # , isv_private_key, yop_public_key)
+            plain = encryptor.envelope_decrypt(response)
             print('plain:{}'.format(plain))
 
             assert plain == content
