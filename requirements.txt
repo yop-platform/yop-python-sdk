@@ -1,8 +1,7 @@
 crcmod==1.7
 future==0.18.2
-pycrypto==2.6.1
-pycryptodomex==3.10.1
-pyOpenSSL==20.0.1
-pytest==4.6.11
+pycryptodomex==3.11.0
+pyOpenSSL==21.0.0
+pytest==6.2.5
 requests-toolbelt==0.9.1
 simplejson==3.17.2

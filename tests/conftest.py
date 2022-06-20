@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from client.yopclient import YopClient
-from client.yop_client_config import YopClientConfig
+from yop_python_sdk.client.yopclient import YopClient
+from yop_python_sdk.client.yop_client_config import YopClientConfig
 
 
 def pytest_addoption(parser):
@@ -10,12 +10,14 @@ def pytest_addoption(parser):
     添加命令行参数 --env
     '''
 
-    parser.addoption(
-        "--env", action="store", default="prod", help="browser option: local, qa, prod"
-    )
-    parser.addoption(
-        "--cert-type", action="store", default="rsa", help="browser option: sm, rsa"
-    )
+    parser.addoption("--env",
+                     action="store",
+                     default="prod",
+                     help="browser option: local, qa, prod")
+    parser.addoption("--cert-type",
+                     action="store",
+                     default="rsa",
+                     help="browser option: sm, rsa")
 
 
 @pytest.fixture(scope='session')

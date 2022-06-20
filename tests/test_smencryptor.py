@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_logger as yop_logger
-from auth.v3signer.credentials import YopCredentials
+import yop_python_sdk.utils.yop_logger as yop_logger
+from yop_python_sdk.auth.v3signer.credentials import YopCredentials
 
 logger = yop_logger.get_logger()
 

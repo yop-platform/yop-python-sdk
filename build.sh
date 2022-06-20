@@ -5,7 +5,9 @@
 #python setup.py check
 
 ## 1.打包一个源代码的包
-python setup.py clean --all && python setup.py check && python setup.py sdist build && python setup.py bdist_wheel --universal && python -m twine upload dist/*
+python3 setup.py clean --all && python3 setup.py check && python3 setup.py sdist build && python3 setup.py bdist_wheel --universal
+
+python3 -m twine upload dist/*
 
 # 发布
 

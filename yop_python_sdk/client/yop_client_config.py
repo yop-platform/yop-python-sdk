@@ -7,9 +7,11 @@ from yop_python_sdk.auth.v3signer.credentials import YopCredentials
 import simplejson
 import yop_python_sdk.utils.yop_logger as yop_logger
 from Crypto.PublicKey import RSA
+from . import client_config
 
 
-class YopClientConfig:
+class YopClientConfig(client_config.ClientConfig):
+
     def __init__(self, config_file='config/yop_sdk_config_rsa_prod.json'):
         """
         Initializes the SDK.
@@ -71,18 +73,8 @@ class YopClientConfig:
         store_type = config.get('store_type', 'string')
         cert_type = config.get('cert_type', 'RSA2048')
         appKey = config.get('app_key', appKey)
-        if 'string' == store_type:
-            private_key_string = config['value']
-            if cert_type.startswith('RSA'):
-                private_key = RSA.importKey('-----BEGIN PRIVATE KEY-----\n' +
-                                            private_key_string +
-                                            '\n-----END PRIVATE KEY-----')
-            else:
-                private_key = PrivateKey.fromPem(private_key_string)
-            return YopCredentials(appKey=appKey, priKey=private_key, cert_type=cert_type)
-        else:
-            self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
-            return None
+        return super()._parse_isv_pri_key(appKey, config['value'], store_type,
+                                          cert_type)
 
     def _parse_yop_public_key(self, config):
         """
@@ -95,60 +87,8 @@ class YopClientConfig:
         store_type = config.get('store_type', 'string')
         cert_type = config.get('cert_type', 'RSA2048')
         serial_no = config.get('serial_no', 'unknown')
-        if 'string' == store_type:
-            public_key_string = config['value']
-            if cert_type.startswith('RSA'):
-                yop_public_key = RSA.importKey(
-                    '-----BEGIN PUBLIC KEY-----\n' +
-                    public_key_string +
-                    '\n-----END PUBLIC KEY-----')
-            else:
-                yop_public_key = PublicKey.fromPem(public_key_string).toStr()
-        elif 'file_cer' == store_type:
-            cert_file = config['value']
-            yop_public_key = self.cer_analysis(cert_file)
-            if cert_type.startswith('RSA'):
-                yop_public_key = RSA.importKey(yop_public_key)
-            else:
-                yop_public_key = PublicKey.fromPem(yop_public_key).toStr()
-        else:
-            self.logger.warn('暂时不支持的密钥类型 {}'.format(store_type))
-            yop_public_key = None
-
-        return yop_public_key, cert_type, serial_no
-
-    def cer_analysis(self, ceradd):
-        '''
-        解析证书文件
-        '''
-        file_context = open(ceradd).read()
-        cert = OpenSSL.crypto.load_certificate(
-            OpenSSL.crypto.FILETYPE_PEM, file_context)
-
-        certIssue = cert.get_issuer()
-        version = cert.get_version() + 1
-        serial_no = cert.get_serial_number()
-        # signature = cert.get_signature_algorithm().decode("UTF-8")
-        comname = certIssue.commonName
-        starttime = cert.get_notBefore()
-        endtime = cert.get_notAfter()
-        flag = cert.has_expired()
-        # long = cert.get_pubkey().bits()
-        public = OpenSSL.crypto.dump_publickey(
-            OpenSSL.crypto.FILETYPE_PEM, cert.get_pubkey()).decode("utf-8")
-        # ext = cert.get_extension_count()
-        # components = certIssue.get_components()
-
-        self.logger.info(
-            "comname:{}\nversion:{}\nserial_no:{}\nstarttime:{}\nendtime:{}\nexpired:{}\n{}".format(
-                comname,
-                version,
-                serial_no,
-                starttime,
-                endtime,
-                flag,
-                public))
-        return public
+        return super()._parse_yop_pub_key(config['value'], store_type,
+                                          cert_type, serial_no)
 
     def get_server_root(self):
         """

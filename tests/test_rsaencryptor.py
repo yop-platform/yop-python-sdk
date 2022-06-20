@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import utils.yop_logger as yop_logger
-import security.encryptor.rsaencryptor as RsaEncryptor
-import utils.yop_security_utils as yop_security_utils
+import yop_python_sdk.utils.yop_logger as yop_logger
+import yop_python_sdk.security.encryptor.rsaencryptor as RsaEncryptor
+import yop_python_sdk.utils.yop_security_utils as yop_security_utils
 
 logger = yop_logger.get_logger()
 

@@ -13,6 +13,8 @@
 
 ## 生成虚拟环境
 
+以 virtualenv 为例
+
 ```shell
 pip install virtualenv
 ```
@@ -107,6 +109,12 @@ res = client.get(api=api, params=params, credentials=credentials)
 ```shell
 python -m pip uninstall crypto pycrypto pycryptodome yop-python-sdk
 python -m pip install pycryptodome
+```
+
+### ImportError: bad magic number in 'xxx'
+
+```shell
+rm -Rf **/*.pyc
 ```
 
 ## Contributing

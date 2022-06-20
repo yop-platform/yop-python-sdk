@@ -24,6 +24,7 @@ _SIGV4_TIMESTAMP_FORMAT = "%Y%m%dT%H%M%S"
 
 
 class SigV3AuthProvider:
+
     def __init__(self, yop_encryptor_dict):
         """
         Initialize the YarpEncryptor.
@@ -47,6 +48,7 @@ class SigV3AuthProvider:
 
 
 class SigV3Authenticator:
+
     def __init__(self, yop_encryptor_dict, session_id=''):
         """
         Initialize the YarpEncryptor.
@@ -60,7 +62,8 @@ class SigV3Authenticator:
         self.yop_encryptor_dict = yop_encryptor_dict
         self.session_id = session_id
 
-    def _format_iso8601_timestamp(self, date_time=datetime.datetime.utcnow().replace(microsecond=0)):
+    def _format_iso8601_timestamp(
+        self, date_time=datetime.datetime.utcnow().replace(microsecond=0)):
         """
         Format ISO8601 timestamp.
 
@@ -130,8 +133,8 @@ class SigV3Authenticator:
         elif 'POST' == http_method and not json_param and post_params:
             query_str = self.get_query_str(post_params.items())
 
-        self.logger.debug(
-            'http_method:{}, query_str:{}'.format(http_method, query_str))
+        self.logger.debug('http_method:{}, query_str:{}'.format(
+            http_method, query_str))
 
         headers = {}
         yop_request_id = str(uuid.uuid4())
@@ -184,14 +187,11 @@ class SigV3Authenticator:
         """
         sha256 = hashlib.sha256()
         sha256.update(
-            simplejson.dumps(
-                json_params,
-                sort_keys=True,
-                indent=4,
-                separators=(
-                    ',',
-                    ': '),
-                ensure_ascii=True).encode("latin-1"))
+            simplejson.dumps(json_params,
+                             sort_keys=True,
+                             indent=4,
+                             separators=(',', ': '),
+                             ensure_ascii=True).encode("latin-1"))
         return sha256.hexdigest()
 
     def combine_url(self, url, query_dict):
@@ -246,14 +246,18 @@ class SigV3Authenticator:
         self._do_verify_res(res, cert_type)
 
         # crc64ecma
-        if post_params is not None and res.headers.__contains__('x-yop-hash-crc64ecma'):
-            actual_crc64ecma = self._files_crc64(post_params)
-            expect_crc64ecma = res.headers['x-yop-hash-crc64ecma']
-            if actual_crc64ecma != expect_crc64ecma:
-                self.logger.info(
-                    'crc verify failed, expect_crc64ecma:{}, actual_crc64ecma:{}'.format(
-                        expect_crc64ecma, actual_crc64ecma, ))
-                raise Exception("isv.scene.filestore.put.crc-failed")
+        # if post_params is not None and res.headers.__contains__(
+        #         'x-yop-hash-crc64ecma'):
+        #     actual_crc64ecma = self._files_crc64(post_params)
+        #     expect_crc64ecma = res.headers['x-yop-hash-crc64ecma']
+        #     if actual_crc64ecma != expect_crc64ecma:
+        #         self.logger.info(
+        #             'crc verify failed, expect_crc64ecma:{}, actual_crc64ecma:{}'
+        #             .format(
+        #                 expect_crc64ecma,
+        #                 actual_crc64ecma,
+        #             ))
+        #         raise Exception("isv.scene.filestore.put.crc-failed")
 
     def _verify_res_download(self, res, cert_type, file):
         """
@@ -270,9 +274,12 @@ class SigV3Authenticator:
             actual_crc64ecma = str(yop_security_utils.cal_file_crc64(file))
             expect_crc64ecma = res.headers['x-yop-hash-crc64ecma']
             if actual_crc64ecma != expect_crc64ecma:
-                self.logger.info(
-                    'crc verify failed, expect_crc64ecma:{}, actual_crc64ecma:{}'.format(
-                        expect_crc64ecma, actual_crc64ecma, ))
+                self.logger.warn(
+                    'crc verify failed, expect_crc64ecma:{}, actual_crc64ecma:{}'
+                    .format(
+                        expect_crc64ecma,
+                        actual_crc64ecma,
+                    ))
                 raise Exception("isv.scene.filestore.get.crc-failed")
 
     def _do_verify_res(self, res, cert_type):
@@ -286,16 +293,18 @@ class SigV3Authenticator:
         """
         # 验签
         if res.headers.__contains__('x-yop-sign'):
-            text = res.text.replace('\t', '').replace(
-                '\n', '').replace(' ', '')
+            text = res.text.replace('\t', '').replace('\n',
+                                                      '').replace(' ', '')
             signature = res.headers['x-yop-sign']
             serial_no = res.headers.get('x-yop-serial-no', default=None)
             sig_flag = self.yop_encryptor_dict[cert_type].verify_signature(
                 text, signature, serial_no=serial_no)
             if not sig_flag:
-                self.logger.info(
+                self.logger.warn(
                     'signature verify failed, text:{}, signature:{}'.format(
-                        text, signature, ))
+                        text,
+                        signature,
+                    ))
                 raise Exception("sdk.invoke.digest.verify-failure")
 
     def _files_crc64(self, post_params={}):
@@ -309,6 +318,7 @@ class SigV3Authenticator:
         sorted_items = sorted(post_params.items())
         crc64ecma = []
         for k, v in sorted_items:
+            self.logger.info('crc verify v:{}'.format(v, ))
             if isinstance(v, tuple):
                 crc64ecma.append(str(yop_security_utils.cal_file_crc64(v[1])))
 
