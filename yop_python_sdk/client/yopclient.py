@@ -13,7 +13,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 from yop_python_sdk.client.yop_client_config import YopClientConfig
 import yop_python_sdk.utils.yop_logger as yop_logger
 
-SDK_VERSION = '4.2.1'
+SDK_VERSION = '4.2.2'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
