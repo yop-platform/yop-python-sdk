@@ -38,6 +38,7 @@ setup(
     # pip3 uninstall pycrypto
     # pip3 install pycryptodome
     install_requires=[
+        'crcmod>=1.7',
         'future>=0.18.2',
         'pycryptodome>=3.14.1',
         'pyOpenSSL>=22.0.0',
