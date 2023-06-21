@@ -8,7 +8,7 @@ import yop_python_sdk.utils.yop_logger as yop_logger
 from Crypto.PublicKey import RSA
 
 
-class ClientConfig:
+class ClientConfig(object):
 
     def __init__(self):
         """
@@ -70,6 +70,30 @@ class ClientConfig:
             yop_public_key = None
 
         return yop_public_key, cert_type, serial_no
+
+    def _parse_http_client(self, connect_timeout, read_timeout, max_conn_total, max_conn_per_route):
+        """
+        Parse the http client key from a config file.
+
+        Args:
+            self: write your description
+            config: write your description
+        """
+        try:
+            connect_timeout = self.check_is_number(connect_timeout)
+            read_timeout = self.check_is_number(read_timeout)
+            max_conn_total = self.check_is_number(max_conn_total)
+            max_conn_per_route = self.check_is_number(max_conn_per_route)
+        except Exception as e:
+            self.logger.error(e)
+            raise e
+        return connect_timeout, read_timeout, max_conn_total, max_conn_per_route
+
+    def check_is_number(self, value):
+        if (isinstance(value, int) or isinstance(value, float)) and value > 0:
+            return value
+        else:
+            raise Exception("value must be int or float type and > 0, value: {}".format(value))
 
     def cer_analysis(self, ceradd):
         '''

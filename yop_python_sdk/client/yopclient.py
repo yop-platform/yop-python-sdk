@@ -72,7 +72,7 @@ class YopClient:
             return RsaEncryptor(
                 public_key=list(yop_public_key_dict.values())[0])
 
-    def get(self, api, query_params={}, credentials=None, basePath=None):
+    def get(self, api, query_params={}, credentials=None, basePath=None, http_param=None):
         """
         Make a GET request to the API.
 
@@ -89,6 +89,7 @@ class YopClient:
         if basePath is None:
             basePath = self.clientConfig.get_server_root()
 
+        http_client = self.parse_http_param(http_param)
         authorization = self.authProvider.new_authenticator()
         headers = authorization.generate_signature(url=api,
                                                    http_method='GET',
@@ -102,7 +103,8 @@ class YopClient:
         url = ''.join([basePath, api])
         res = self._get_request(url,
                                 query_params=query_params,
-                                headers=headers)
+                                headers=headers,
+                                http_client=http_client)
         self.logger.info(
             'request:\nGET {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'
             .format(url, headers, query_params, res.headers, res.text,
@@ -118,12 +120,24 @@ class YopClient:
             self.logger.warn(res.text)
             raise e
 
+    def parse_http_param(self, http_param={}):
+        http_client = self.clientConfig.get_http_client()
+        if http_param is not None:
+            for key, value in http_param.items():
+                if key in http_client:
+                    if (isinstance(value, int) or isinstance(value, float)) and value > 0:
+                        http_client[key] = value
+                    else:
+                        raise Exception("http client parameter is nonstandard, key: {}".format(key))
+        return http_client
+
     def download(self,
                  api,
                  query_params={},
                  credentials=None,
                  basePath=None,
-                 file_path=None):
+                 file_path=None,
+                 http_param=None):
         """
         Downloads the specified API from the server.
 
@@ -141,6 +155,7 @@ class YopClient:
         if basePath is None:
             basePath = self.clientConfig.get_server_root()
 
+        http_client = self.parse_http_param(http_param)
         authorization = self.authProvider.new_authenticator()
         headers = authorization.generate_signature(url=api,
                                                    http_method='GET',
@@ -154,7 +169,8 @@ class YopClient:
         url = ''.join([basePath, api])
         res = self._get_request(url,
                                 query_params=query_params,
-                                headers=headers)
+                                headers=headers,
+                                http_client=http_client)
         self.logger.debug(
             'request:\nGET {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\ntime:{}ms\n'
             .format(url, headers, query_params, res.headers,
@@ -190,7 +206,7 @@ class YopClient:
         else:
             return 1
 
-    def _get_request(self, url, query_params={}, headers={}):
+    def _get_request(self, url, query_params={}, headers={}, http_client={}):
         """
         Wrapper for requests. get that handles the headers and returns the response.
 
@@ -200,10 +216,14 @@ class YopClient:
             query_params: write your description
             headers: write your description
         """
-        res = requests.get(url=url, params=query_params, headers=headers)
-        return res
+        try:
+            return requests.get(url=url, params=query_params, headers=headers, timeout=(http_client['connect_timeout'], http_client['read_timeout']))
+        except requests.exceptions.Timeout:
+            raise Exception("http request timeout")
+        except requests.exceptions.ConnectionError:
+            raise Exception("http connection error")
 
-    def post_json(self, api, post_params={}, credentials=None, basePath=None):
+    def post_json(self, api, post_params={}, credentials=None, basePath=None, http_param=None):
         """
         POST the specified post params to the specified API
 
@@ -218,14 +238,16 @@ class YopClient:
                          post_params,
                          credentials,
                          basePath=basePath,
-                         json_param=True)
+                         json_param=True,
+                         http_param=http_param)
 
     def post(self,
              api,
              post_params={},
              credentials=None,
              basePath=None,
-             json_param=False):
+             json_param=False,
+             http_param=None):
         """
         Make a POST request to the API.
 
@@ -242,6 +264,8 @@ class YopClient:
 
         if basePath is None:
             basePath = self.clientConfig.get_server_root()
+
+        http_client = self.parse_http_param(http_param)
 
         authorization = self.authProvider.new_authenticator()
         headers = authorization.generate_signature(url=api,
@@ -263,9 +287,11 @@ class YopClient:
                                     indent=4,
                                     separators=(',', ': '),
                                     ensure_ascii=True).encode("latin-1")
-            res = self._post_request(url, payload=data, headers=headers)
+            res = self._post_request(url, payload=data, headers=headers,
+                                     http_client=http_client)
         else:
-            res = self._post_request(url, params=post_params, headers=headers)
+            res = self._post_request(url, params=post_params, headers=headers,
+                                     http_client=http_client)
 
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
@@ -277,7 +303,8 @@ class YopClient:
             self.logger.warn(res.text)
             raise e
 
-    def upload(self, api, post_params={}, credentials=None, basePath=None):
+    def upload(self, api, post_params={}, credentials=None, basePath=None,
+               http_param=None):
         """
         Upload a new file to Yos.
 
@@ -294,6 +321,7 @@ class YopClient:
         if basePath is None:
             basePath = self.clientConfig.get_yos_server_root()
 
+        http_client = self.parse_http_param(http_param)
         authorization = self.authProvider.new_authenticator()
         headers = authorization.generate_signature(url=api,
                                                    http_method='POST',
@@ -306,7 +334,7 @@ class YopClient:
         headers['content-type'] = multipart.content_type
 
         url = ''.join([basePath, api])
-        res = self._post_request(url, payload=multipart, headers=headers)
+        res = self._post_request(url, payload=multipart, headers=headers, http_client=http_client)
 
         if res.status_code == 400:
             raise Exception("isv.service.not-exists")
@@ -319,7 +347,7 @@ class YopClient:
             self.logger.warn(res.text)
             raise e
 
-    def _post_request(self, url, payload=None, params=None, headers={}):
+    def _post_request(self, url, payload=None, params=None, headers={}, http_client={}):
         """
         Perform a POST request.
 
@@ -330,12 +358,18 @@ class YopClient:
             params: write your description
             headers: write your description
         """
-        res = requests.post(url=url,
-                            headers=headers,
-                            data=payload,
-                            params=params)
-        self.logger.debug(
-            'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'
-            .format(url, headers, params, res.headers, res.text,
-                    res.elapsed.microseconds / 1000.))
-        return res
+        try:
+            res = requests.post(url=url,
+                                headers=headers,
+                                data=payload,
+                                params=params,
+                                timeout=(http_client['connect_timeout'], http_client['read_timeout']))
+            self.logger.debug(
+                'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'
+                .format(url, headers, params, res.headers, res.text,
+                        res.elapsed.microseconds / 1000.))
+            return res
+        except requests.exceptions.Timeout:
+            raise Exception("http request timeout")
+        except requests.exceptions.ConnectionError:
+            raise Exception("http connection error")
