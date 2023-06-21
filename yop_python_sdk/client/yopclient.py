@@ -218,8 +218,8 @@ class YopClient:
         """
         try:
             return requests.get(url=url, params=query_params, headers=headers, timeout=(http_client['connect_timeout'], http_client['read_timeout']))
-        except requests.exceptions.Timeout:
-            raise Exception("http request timeout")
+        except requests.exceptions.Timeout as e:
+            raise Exception("request timeout : {}".format(e))
         except requests.exceptions.ConnectionError:
             raise Exception("http connection error")
 
@@ -369,7 +369,7 @@ class YopClient:
                 .format(url, headers, params, res.headers, res.text,
                         res.elapsed.microseconds / 1000.))
             return res
-        except requests.exceptions.Timeout:
-            raise Exception("http request timeout")
+        except requests.exceptions.Timeout as e:
+            raise Exception("request timeout : {}".format(e))
         except requests.exceptions.ConnectionError:
             raise Exception("http connection error")
