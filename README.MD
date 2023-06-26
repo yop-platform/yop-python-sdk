@@ -6,8 +6,8 @@
 
 ### Minimum Requirements 最小系统要求
 
-- Python 2.7+
 - Python 3.5+
+- Python 2.7+ (不能保证停止维护的Python版本有效，请参考https://www.python.org/doc/sunset-python-2/)
 
 ### Install from PyPI 从 PyPI 安装
 
@@ -27,26 +27,22 @@ pip install virtualenv
 source ~/python3/bin/activate
 ```
 
-### For python2
-
-```shell
-# rm -rf ~/python2
-/usr/bin/env /usr/bin/python -m virtualenv -p ~/python2
-source ~/python2/bin/activate
-```
-
 ## 安装 yop-python-sdk
 
 ### 从仓库安装最新版本
 
 ```shell
 python -m pip install yop-python-sdk
+
+# crypto 相关的报错如何解决
+python -m pip uninstall crypto pycrypto pycryptodome yop-python-sdk
+python -m pip install pycryptodome
 ```
 
 ### 从指定仓库安装指定的版本
 
 ```shell
-python -m pip install --upgrade --index-url https://pypi.org/simple yop-python-sdk==3.3.12
+python -m pip install --upgrade --index-url https://pypi.org/simple yop-python-sdk==4.2.3
 ```
 
 ### Install from source 从源码安装(不推荐)
@@ -103,13 +99,6 @@ res = client.get(api=api, params=params, credentials=credentials)
 ```
 
 更多用法，请参考 test 目录下面的单元测试。
-
-### crypto 相关的报错如何解决
-
-```shell
-python -m pip uninstall crypto pycrypto pycryptodome yop-python-sdk
-python -m pip install pycryptodome
-```
 
 ### ImportError: bad magic number in 'xxx'
 
