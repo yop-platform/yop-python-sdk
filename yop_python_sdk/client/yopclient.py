@@ -122,14 +122,17 @@ class YopClient:
 
     def parse_http_param(self, http_param={}):
         http_client = self.clientConfig.get_http_client()
+        tem_dict = {}
         if http_param is not None:
-            for key, value in http_param.items():
-                if key in http_client:
-                    if (isinstance(value, int) or isinstance(value, float)) and value > 0:
-                        http_client[key] = value
+            for key, value in http_client.items():
+                tem_dict[key] = value
+                if key in http_param:
+                    tem_value = http_param[key]
+                    if (isinstance(tem_value, int) or isinstance(tem_value, float)) and tem_value > 0:
+                        tem_dict[key] = value
                     else:
                         raise Exception("http client parameter is nonstandard, key: {}".format(key))
-        return http_client
+        return tem_dict
 
     def download(self,
                  api,
@@ -216,17 +219,12 @@ class YopClient:
             query_params: write your description
             headers: write your description
         """
-        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 2)
-        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 2)
-        try:
-            return requests.get(url=url,
-                                params=query_params,
-                                headers=headers,
-                                timeout=(http_client['connect_timeout'], http_client['read_timeout']))
-        except requests.exceptions.Timeout as e:
-            raise Exception("request timeout : {}".format(e))
-        except requests.exceptions.ConnectionError:
-            raise Exception("http connection error")
+        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 3)
+        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 3)
+        return requests.get(url=url,
+                            params=query_params,
+                            headers=headers,
+                            timeout=(http_client['connect_timeout'], http_client['read_timeout']))
 
     def post_json(self, api, post_params={}, credentials=None, basePath=None, http_param=None):
         """
@@ -363,20 +361,15 @@ class YopClient:
             params: write your description
             headers: write your description
         """
-        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 2)
-        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 2)
-        try:
-            res = requests.post(url=url,
-                                headers=headers,
-                                data=payload,
-                                params=params,
-                                timeout=(http_client['connect_timeout'], http_client['read_timeout']))
-            self.logger.debug(
-                'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'
-                .format(url, headers, params, res.headers, res.text,
-                        res.elapsed.microseconds / 1000.))
-            return res
-        except requests.exceptions.Timeout as e:
-            raise Exception("request timeout : {}".format(e))
-        except requests.exceptions.ConnectionError:
-            raise Exception("http connection error")
+        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 3)
+        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 3)
+        res = requests.post(url=url,
+                            headers=headers,
+                            data=payload,
+                            params=params,
+                            timeout=(http_client['connect_timeout'], http_client['read_timeout']))
+        self.logger.debug(
+            'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'
+            .format(url, headers, params, res.headers, res.text,
+                    res.elapsed.microseconds / 1000.))
+        return res

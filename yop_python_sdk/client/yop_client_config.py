@@ -96,8 +96,10 @@ class YopClientConfig(client_config.ClientConfig):
         store_type = config.get('store_type', 'string')
         cert_type = config.get('cert_type', 'RSA2048')
         serial_no = config.get('serial_no', 'unknown')
-        return super(YopClientConfig, self)._parse_yop_pub_key(config['value'], store_type,
-                                                               cert_type, serial_no)
+        return super(YopClientConfig, self)._parse_yop_pub_key(config['value'],
+                                                               store_type,
+                                                               cert_type,
+                                                               serial_no)
 
     def _parse_http_client(self, config):
         """
@@ -112,7 +114,9 @@ class YopClientConfig(client_config.ClientConfig):
         max_conn_total = config.get('max_conn_total', 200)
         max_conn_per_route = config.get('max_conn_per_route', 100)
         return super(YopClientConfig, self)._parse_http_client(connect_timeout,
-                                                               read_timeout, max_conn_total, max_conn_per_route)
+                                                               read_timeout,
+                                                               max_conn_total,
+                                                               max_conn_per_route)
 
     def get_http_client(self):
         """
