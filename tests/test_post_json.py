@@ -88,3 +88,23 @@ class Test(object):
         }
         res = client.post_json(api, params)
         assertion.failure(res, '40020')
+
+    def test_post_json_with_http_param(self, client):
+        """
+        Test POST JSON response with http parameters.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/std/eaccount/topupquery'
+        params = {
+            'parentMerchantNo': '10000470992',
+            'merchantNo': '10000470992',
+            'orderId': '12345'
+        }
+        http_param = {'connect_timeout': 1000,
+                      'read_timeout': 1000}
+        res = client.post_json(api, params, http_param=http_param)
+        if 'qa' == client.env and '40020' != res.get('code'):
+            assertion.success(res)

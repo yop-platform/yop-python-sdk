@@ -6,4 +6,4 @@
 #python3 -m unittest discover test 'test_*.py'
 # pytest --collect-only
 pytest
-# pytest test --html=report.html --self-contained-html
+# pytest yop_python_sdk/tests --html=report.html --self-contained-html
