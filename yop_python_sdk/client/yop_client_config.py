@@ -83,7 +83,7 @@ class YopClientConfig(client_config.ClientConfig):
         cert_type = config.get('cert_type', 'RSA2048')
         appKey = config.get('app_key', appKey)
         return super(YopClientConfig, self)._parse_isv_pri_key(appKey, config['value'], store_type,
-                                          cert_type)
+                                                               cert_type)
 
     def _parse_yop_public_key(self, config):
         """
@@ -97,7 +97,7 @@ class YopClientConfig(client_config.ClientConfig):
         cert_type = config.get('cert_type', 'RSA2048')
         serial_no = config.get('serial_no', 'unknown')
         return super(YopClientConfig, self)._parse_yop_pub_key(config['value'], store_type,
-                                          cert_type, serial_no)
+                                                               cert_type, serial_no)
 
     def _parse_http_client(self, config):
         """
@@ -107,12 +107,12 @@ class YopClientConfig(client_config.ClientConfig):
             self: write your description
             config: write your description
         """
-        connect_timeout = config.get('connect_timeout', 10)
-        read_timeout = config.get('read_timeout', 30)
+        connect_timeout = config.get('connect_timeout', 10000)
+        read_timeout = config.get('read_timeout', 30000)
         max_conn_total = config.get('max_conn_total', 200)
         max_conn_per_route = config.get('max_conn_per_route', 100)
         return super(YopClientConfig, self)._parse_http_client(connect_timeout,
-                                          read_timeout, max_conn_total, max_conn_per_route)
+                                                               read_timeout, max_conn_total, max_conn_per_route)
 
     def get_http_client(self):
         """

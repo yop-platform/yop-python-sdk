@@ -64,3 +64,25 @@ class Test(object):
         }
         res = client.get(api, params)
         assertion.failure(res, '40042')
+
+    def test_get_with_http_param(self, client):
+        """
+        Run the get test with http parameters.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/cnppay/bank-limit/query'
+        params = {'merchantNo': '10000470992'}
+        http_param = {'connect_timeout': 1000,
+                      'read_timeout': 1000}
+        res = client.get(api, params, http_param=http_param)
+        if 'prod' == client.env:
+            if 'sm' == client.cert_type:
+                assertion.failure(res, '40029')
+            else:
+                assertion.success(res)
+                assert '00000' == res['result']['code']
+        else:
+            assert '40042' == res['code']

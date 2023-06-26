@@ -13,7 +13,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 from yop_python_sdk.client.yop_client_config import YopClientConfig
 import yop_python_sdk.utils.yop_logger as yop_logger
 
-SDK_VERSION = '4.2.2'
+SDK_VERSION = '4.2.3'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -216,8 +216,13 @@ class YopClient:
             query_params: write your description
             headers: write your description
         """
+        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 2)
+        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 2)
         try:
-            return requests.get(url=url, params=query_params, headers=headers, timeout=(http_client['connect_timeout'], http_client['read_timeout']))
+            return requests.get(url=url,
+                                params=query_params,
+                                headers=headers,
+                                timeout=(http_client['connect_timeout'], http_client['read_timeout']))
         except requests.exceptions.Timeout as e:
             raise Exception("request timeout : {}".format(e))
         except requests.exceptions.ConnectionError:
@@ -358,6 +363,8 @@ class YopClient:
             params: write your description
             headers: write your description
         """
+        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 2)
+        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 2)
         try:
             res = requests.post(url=url,
                                 headers=headers,
