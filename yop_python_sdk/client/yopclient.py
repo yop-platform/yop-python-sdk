@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import locale
 import os
+import platform
+
+import requests
+import simplejson
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+from simplejson.decoder import JSONDecodeError
+
+import yop_python_sdk.utils.yop_logger as yop_logger
+from yop_python_sdk.auth.v3signer.auth import SigV3AuthProvider
+from yop_python_sdk.client.yop_client_config import YopClientConfig
 from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
 from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
-import simplejson
-from simplejson.decoder import JSONDecodeError
-import platform
-import locale
-from yop_python_sdk.auth.v3signer.auth import SigV3AuthProvider
-import requests
-from requests_toolbelt.multipart.encoder import MultipartEncoder
-from yop_python_sdk.client.yop_client_config import YopClientConfig
-import yop_python_sdk.utils.yop_logger as yop_logger
 
 SDK_VERSION = '4.2.3'
 platform_info = platform.platform().split("-")
@@ -132,6 +134,8 @@ class YopClient:
                         tem_dict[key] = value
                     else:
                         raise Exception("http client parameter is nonstandard, key: {}".format(key))
+        else:
+            tem_dict = http_client
         return tem_dict
 
     def download(self,
