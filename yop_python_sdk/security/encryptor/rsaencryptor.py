@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import os
 import base64
-from . import encryptor
-from Crypto import Random
-from Crypto.Hash import SHA256
-from Crypto.Signature import PKCS1_v1_5
-import yop_python_sdk.utils.yop_logger as yop_logger
-import yop_python_sdk.utils.yop_security_utils as yop_security_utils
+import os
 from builtins import bytes
+
+from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
+from Crypto.Hash import SHA256
+from Crypto.Signature import PKCS1_v1_5
+
+import yop_python_sdk.utils.yop_logger as yop_logger
+import yop_python_sdk.utils.yop_security_utils as yop_security_utils
 from yop_python_sdk.security.ecdsa.utils.compatibility import pad, unpad
+from . import encryptor
 
 YOP_RSA_ALGORITHM = 'YOP-RSA2048-SHA256'
 
@@ -156,7 +158,7 @@ class RsaEncryptor(encryptor.Encryptor):
         data = unpad(data, len(random_key))
 
         # 分解参数
-        data = data.split('$')
+        data = data.rsplit('$', 1)
         source_data = data[0]
         signature = data[1].rstrip('\n')
         verify_sign = self.verify_signature(source_data, signature, public_key)
