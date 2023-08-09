@@ -42,7 +42,7 @@ python -m pip install pycryptodome
 ### 从指定仓库安装指定的版本
 
 ```shell
-python -m pip install --upgrade --index-url https://pypi.org/simple yop-python-sdk==4.2.3
+python -m pip install --upgrade --index-url https://pypi.org/simple yop-python-sdk==4.2.5
 ```
 
 ### Install from source 从源码安装(不推荐)
