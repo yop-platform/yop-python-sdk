@@ -212,6 +212,8 @@ class YopClient:
             raise e
         else:
             return 1
+        finally:
+            file.close()
 
     def _get_request(self, url, query_params={}, headers={}, http_client={}):
         """
