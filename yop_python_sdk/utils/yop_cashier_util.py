@@ -112,10 +112,24 @@ class YopCashierUtil(object):
         return t2.join(lt)
 
     def verify_sand_data(self, verify_data, verify_sign):
+        """
+        Verify the signed and signed data.
+
+        Args:
+            self: write your description
+            verify_data: write your description
+            verify_sign: write your description
+        """
         verify_data = verify_data.encode("utf-8")
         return False, str("error")
 
     def query_order_yop(self):
+        """
+        YOP query ordering
+
+        Args:
+            self: write your description
+        """
         return False, str("error")
 
 
