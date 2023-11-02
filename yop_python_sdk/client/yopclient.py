@@ -15,7 +15,7 @@ from yop_python_sdk.client.yop_client_config import YopClientConfig
 from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
 from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
 
-SDK_VERSION = '4.2.5'
+SDK_VERSION = '4.2.6'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -28,6 +28,12 @@ USER_AGENT = "/".join([
     platform.python_version(), locale_lang
 ])
 
+try:
+    # python 3.x
+    from urllib.parse import quote, quote_plus
+except ImportError:
+    # python 2.x
+    from urllib import quote
 
 class YopClient:
     clientConfig = None
@@ -99,8 +105,9 @@ class YopClient:
                                                    credentials=credentials)
         headers['user-agent'] = USER_AGENT
 
-        # for k, v in query_params.items():
-        #         query_params[k] = quote(str(v), 'utf-8')
+        for k, v in query_params.items():
+            query_params[k] = quote_plus(str(v), 'utf-8')
+        self.logger.debug(query_params)
 
         url = ''.join([basePath, api])
         res = self._get_request(url,
@@ -284,9 +291,6 @@ class YopClient:
                                                    json_param=json_param)
         headers['user-agent'] = USER_AGENT
 
-        # for k, v in post_params.items():
-        #         post_params[k] = quote(str(v), 'utf-8')
-
         url = ''.join([basePath, api])
 
         if json_param:
@@ -299,6 +303,10 @@ class YopClient:
             res = self._post_request(url, payload=data, headers=headers,
                                      http_client=http_client)
         else:
+            headers['content-type'] = 'application/x-www-form-urlencoded'
+            for k, v in post_params.items():
+                post_params[k] = quote_plus(str(v), 'utf-8')
+            self.logger.debug(post_params)
             res = self._post_request(url, params=post_params, headers=headers,
                                      http_client=http_client)
 
