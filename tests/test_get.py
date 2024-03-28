@@ -86,3 +86,16 @@ class Test(object):
                 assert '00000' == res['result']['code']
         else:
             assert '40042' == res['code']
+
+    def test_get_param_encode(self, client):
+        """
+        Run the get param encode test.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/test/errorcode2'
+        params = {'errorCode': '你好！@#¥%……&*（）「」｜：“《》？ 😀!@#$%^&*()_+{}|:"<>?'}
+        res = client.get(api, params)
+        assertion.success(res)

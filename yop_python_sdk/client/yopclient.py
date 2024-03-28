@@ -15,7 +15,7 @@ from yop_python_sdk.client.yop_client_config import YopClientConfig
 from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
 from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
 
-SDK_VERSION = '4.2.6'
+SDK_VERSION = '4.2.7'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()

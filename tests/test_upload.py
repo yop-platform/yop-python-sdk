@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import sys
+import urllib
+
 import tests.assertion as assertion
 from yop_python_sdk.auth.v3signer.credentials import YopCredentials
-import urllib
-import sys
 
 sys.path.append("./")
 
@@ -98,4 +99,24 @@ class Test(object):
             'remark': '演示普通参数传递，该api没有remark参数'
         }
         res = client.upload(api, params)
+        assertion.success(res)
+
+    def test_upload_param_encode(self, client):
+        """
+        Uploads a file with param encode to the API and verifies the upload is successful.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        file_path = './LICENSE'
+        # with open(file_path, mode='r', encoding='utf8') as f:
+        api = '/yos/v1.0/mer/merchant/qual/upload'
+        file = open(file_path, mode='rb')
+        params = {
+            'merQual': ('你好！@#¥%……&*（）「」｜：“《》？ 😀!@#$%^&*()_+{}|:"<>?', file, 'multipart/form-data'),
+            'remark': '演示普通参数传递，该api没有remark参数'
+        }
+        res = client.upload(api, params)
+        file.close()
         assertion.success(res)

@@ -108,3 +108,21 @@ class Test(object):
         res = client.post_json(api, params, http_param=http_param)
         if 'qa' == client.env and '40020' != res.get('code'):
             assertion.success(res)
+
+    def test_post_json_param_encode(self, client):
+        """
+        Test POST JSON request param encode.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/std/eaccount/topupquery'
+        params = {
+            'parentMerchantNo': '10000470992',
+            'merchantNo': '10000470992',
+            'orderId': '你好！@#¥%……&*（）「」｜：“《》？ 😀!@#$%^&*()_+{}|:"<>?'
+        }
+        res = client.post_json(api, params)
+        if 'qa' == client.env and '40020' != res.get('code'):
+            assertion.success(res)
