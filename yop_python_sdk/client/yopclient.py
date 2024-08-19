@@ -15,7 +15,7 @@ from yop_python_sdk.client.yop_client_config import YopClientConfig
 from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
 from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
 
-SDK_VERSION = '4.2.6'
+SDK_VERSION = '4.2.7'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -104,7 +104,7 @@ class YopClient:
                                                    query_params=query_params,
                                                    credentials=credentials)
         headers['user-agent'] = USER_AGENT
-
+        headers['content-type'] = 'application/x-www-form-urlencoded'
         for k, v in query_params.items():
             query_params[k] = quote_plus(str(v), 'utf-8')
         self.logger.debug(query_params)
@@ -232,12 +232,12 @@ class YopClient:
             query_params: write your description
             headers: write your description
         """
-        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 3)
-        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 3)
+        connect_timeout = round(http_client['connect_timeout'] / 1000, 3)
+        read_timeout = round(http_client['read_timeout'] / 1000, 3)
         return requests.get(url=url,
                             params=query_params,
                             headers=headers,
-                            timeout=(http_client['connect_timeout'], http_client['read_timeout']))
+                            timeout=(connect_timeout, read_timeout))
 
     def post_json(self, api, post_params={}, credentials=None, basePath=None, http_param=None):
         """
@@ -375,13 +375,13 @@ class YopClient:
             params: write your description
             headers: write your description
         """
-        http_client['connect_timeout'] = round(http_client['connect_timeout'] / 1000, 3)
-        http_client['read_timeout'] = round(http_client['read_timeout'] / 1000, 3)
+        connect_timeout = round(http_client['connect_timeout'] / 1000, 3)
+        read_timeout = round(http_client['read_timeout'] / 1000, 3)
         res = requests.post(url=url,
                             headers=headers,
                             data=payload,
                             params=params,
-                            timeout=(http_client['connect_timeout'], http_client['read_timeout']))
+                            timeout=(connect_timeout, read_timeout))
         self.logger.debug(
             'request:\nPOST {}\nheaders:{}\nparams:{}\nresponse:\nheaders:{}\nbody:{}\ntime:{}ms\n'
             .format(url, headers, params, res.headers, res.text,
