@@ -11,11 +11,12 @@ try:
 except ImportError:
     # python 2.x
     from urllib import quote
-import uuid
-import urllib
-import simplejson
-import hashlib
 import datetime
+import hashlib
+import json
+import urllib
+import uuid
+
 import yop_python_sdk.utils.yop_logger as yop_logger
 import yop_python_sdk.utils.yop_security_utils as yop_security_utils
 
@@ -122,7 +123,7 @@ class SigV3Authenticator:
             post_params: write your description
             json_param: write your description
         """
-        protocol_version = 'yop-auth-v2'
+        protocol_version = 'yop-auth-v3'
         app_key = credentials.get_appKey()
         yop_date = self._format_iso8601_timestamp()
         expired_seconds = EXPIRATION_IN_SECONDS
@@ -130,8 +131,8 @@ class SigV3Authenticator:
         query_str = ''
         if 'GET' == http_method and query_params:
             query_str = self.get_query_str(query_params.items())
-        elif 'POST' == http_method and not json_param and post_params:
-            query_str = self.get_query_str(post_params.items())
+        # elif 'POST' == http_method and not json_param and post_params:
+        #     query_str = self.get_query_str(post_params.items())
 
         self.logger.debug('http_method:{}, query_str:{}'.format(
             http_method, query_str))
@@ -139,16 +140,12 @@ class SigV3Authenticator:
         headers = {}
         yop_request_id = str(uuid.uuid4())
         canonical_header_str = 'x-yop-appkey:' + quote(app_key, 'utf-8')
-        if json_param:
-            yop_content_sha256 = self.content_sha256(json_param)
-            headers['x-yop-content-sha256'] = yop_content_sha256
-            canonical_header_str = canonical_header_str + \
-                '\nx-yop-content-sha256:' + quote(yop_content_sha256, 'utf-8')
-            signed_headers = 'x-yop-appkey;x-yop-content-sha256;x-yop-request-id'
-        else:
-            signed_headers = 'x-yop-appkey;x-yop-request-id'
+        yop_content_sha256 = self.content_sha256(http_method, json_param, post_params)
+        headers['x-yop-content-sha256'] = yop_content_sha256
         canonical_header_str = canonical_header_str + \
-            '\nx-yop-request-id:' + quote(yop_request_id, 'utf-8')
+                               '\nx-yop-content-sha256:' + quote(yop_content_sha256, 'utf-8') + \
+                               '\nx-yop-request-id:' + quote(yop_request_id, 'utf-8')
+        signed_headers = 'x-yop-appkey;x-yop-content-sha256;x-yop-request-id'
 
         auth_str = protocol_version + '/' + app_key + \
             '/' + yop_date + '/' + expired_seconds
@@ -177,21 +174,25 @@ class SigV3Authenticator:
         headers['x-yop-appkey'] = app_key
         return headers
 
-    def content_sha256(self, json_params):
+    def content_sha256(self, http_method, json_param, post_params):
         """
         Generate sha256 hash of json_params.
 
         Args:
             self: write your description
+            http_method: write your description
             json_params: write your description
+            post_params: write your description
         """
         sha256 = hashlib.sha256()
-        sha256.update(
-            simplejson.dumps(json_params,
-                             sort_keys=True,
-                             indent=4,
-                             separators=(',', ': '),
-                             ensure_ascii=True).encode("latin-1"))
+        query_str = ''
+        if 'POST' == http_method and not json_param and post_params:
+            query_str = self.get_query_str(post_params.items())
+        elif 'POST' == http_method and json_param and post_params:
+            query_str = json.dumps(post_params,
+                                   separators=(',', ':'))
+        encode = query_str.encode('utf-8')
+        sha256.update(encode)
         return sha256.hexdigest()
 
     def combine_url(self, url, query_dict):
