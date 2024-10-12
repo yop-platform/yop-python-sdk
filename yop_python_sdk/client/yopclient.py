@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import json
 import locale
 import os
 import platform
@@ -15,7 +15,7 @@ from yop_python_sdk.client.yop_client_config import YopClientConfig
 from yop_python_sdk.security.encryptor.rsaencryptor import RsaEncryptor
 from yop_python_sdk.security.encryptor.smencryptor import SmEncryptor
 
-SDK_VERSION = '4.2.7'
+SDK_VERSION = '4.3.0'
 platform_info = platform.platform().split("-")
 python_compiler = platform.python_compiler().split(' ')
 locale_info = locale.getdefaultlocale()
@@ -295,11 +295,8 @@ class YopClient:
 
         if json_param:
             headers['content-type'] = 'application/json'
-            data = simplejson.dumps(post_params,
-                                    sort_keys=True,
-                                    indent=4,
-                                    separators=(',', ': '),
-                                    ensure_ascii=True).encode("latin-1")
+            data = json.dumps(post_params,
+                              separators=(',', ':')).encode('utf-8')
             res = self._post_request(url, payload=data, headers=headers,
                                      http_client=http_client)
         else:

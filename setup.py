@@ -10,7 +10,7 @@ with open("README.MD", "r") as f:
 
 setup(
     name='yop-python-sdk',
-    version='4.2.7',
+    version='4.3.0',
     description='YOP SDK based on the YOP Common Runtime',
     long_description=long_description,
     long_description_content_type='text/markdown',
