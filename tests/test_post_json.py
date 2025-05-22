@@ -126,3 +126,42 @@ class Test(object):
         res = client.post_json(api, params)
         if 'qa' == client.env and '40020' != res.get('code'):
             assertion.success(res)
+
+    def test_post_form_v3(self, client):
+        """
+        Test POST JSON response with http parameters.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/aggpay/pay'
+        params = {
+            "orderId": "xxxx",
+            "orderAmount": 1,
+            "payWay": "MERCHANT_SCAN",
+            "channel": "WECHAT",
+            "authCode": "0.01",
+            "userIp": "172.xx.x.xx",
+            "terminalId": "terminalId",
+            "terminalSceneInfo": "xxx"
+        }
+        res = client.post(api, params)
+        if 'qa' == client.env:
+            assert '40020' != res.get('code')
+
+    def test_post_json_v3(self, client):
+        """
+        Test POST JSON response with http parameters.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/kj/lp/query'
+        params = {
+            "sourceCurrency": "xxx"
+        }
+        res = client.post_json(api, params)
+        if 'qa' == client.env:
+            assert '40020' != res.get('code')

@@ -99,3 +99,25 @@ class Test(object):
         params = {'errorCode': '你好！@#¥%……&*（）「」｜：“《》？ 😀!@#$%^&*()_+{}|:"<>?'}
         res = client.get(api, params)
         assertion.success(res)
+
+    def test_get_v3(self, client):
+        """
+        Run the get test with http parameters.
+
+        Args:
+            self: write your description
+            client: write your description
+        """
+        api = '/rest/v1.0/trade/order/query'
+        params = {'merchantNo': '100800xxxxx',
+                  'parentMerchantNo': '100800xxxx',
+                  'orderId': 'order_xxxx'}
+        res = client.get(api, params)
+        if 'prod' == client.env:
+            if 'sm' == client.cert_type:
+                assertion.failure(res, '40029')
+            else:
+                assertion.success(res)
+                assert 'OPR00000' == res['result']['code']
+        else:
+            assert 'OPR00000' == res['result']['code']
